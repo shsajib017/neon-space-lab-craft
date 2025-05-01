@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Feed | LAB_WEB_MASTERPLAN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    /* Feed page specific styles */
+    .feed-container {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: var(--spacing-lg);
+      padding-top: calc(var(--navbar-height) + var(--spacing-lg));
+    }
+    
+    .feed-sidebar {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: var(--spacing-lg);
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--spacing-lg));
+      height: min-content;
+      border: 1px solid var(--border);
+    }
+    
+    .feed-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+    
+    .post-form {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: var(--spacing-lg);
+      border: 1px solid var(--border);
+    }
+    
+    .post-form textarea {
+      width: 100%;
+      min-height: 100px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      color: var(--text);
+      font-family: var(--font-body);
+      margin-bottom: var(--spacing-md);
+      resize: none;
+    }
+    
+    .post-form textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .post-attachments {
+      display: flex;
+      gap: var(--spacing-md);
+    }
+    
+    .attachment-btn {
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+    }
+    
+    .attachment-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    
+    .post-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: var(--spacing-lg);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .post-card:hover {
+      border-color: var(--secondary);
+      box-shadow: var(--glow);
+    }
+    
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--spacing-md);
+      font-weight: 600;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+    
+    .post-author {
+      flex-grow: 1;
+    }
+    
+    .post-author h4 {
+      margin-bottom: 0;
+      font-size: 1rem;
+    }
+    
+    .post-time {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    
+    .post-content {
+      margin-bottom: var(--spacing-md);
+      line-height: 1.7;
+    }
+    
+    .post-media {
+      margin-bottom: var(--spacing-md);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    
+    .post-media img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+    }
+    
+    .post-footer {
+      display: flex;
+      gap: var(--spacing-lg);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    .post-action {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .post-action:hover {
+      color: var(--secondary);
+    }
+    
+    .user-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text);
+      border: 2px solid var(--secondary);
+      box-shadow: var(--glow);
+    }
+    
+    .user-name {
+      font-family: var(--font-heading);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .user-role {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-md);
+      font-size: 0.9rem;
+    }
+    
+    .user-badges {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+    
+    .badge {
+      background: rgba(4, 102, 200, 0.2);
+      color: var(--text-secondary);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+    }
+    
+    .badge.highlighted {
+      background: rgba(0, 245, 255, 0.2);
+      color: var(--secondary);
+      border-color: var(--secondary);
+      box-shadow: var(--glow);
+    }
+    
+    .feed-categories {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .feed-categories h3 {
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1rem;
+    }
+    
+    .category-list {
+      list-style: none;
+    }
+    
+    .category-list li {
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .category-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--border-radius);
+      transition: background 0.3s ease;
+    }
+    
+    .category-list a:hover, 
+    .category-list a.active {
+      background: rgba(4, 102, 200, 0.2);
+    }
+    
+    .category-list a.active {
+      color: var(--secondary);
+    }
+    
+    .category-count {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    
+    .trending-topics {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .trending-topics h3 {
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1rem;
+    }
+    
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+    }
+    
+    .topic-tag {
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-secondary);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    
+    .topic-tag:hover {
+      background: rgba(0, 245, 255, 0.1);
+      color: var(--secondary);
+      border-color: var(--secondary);
+      box-shadow: var(--glow);
+    }
+    
+    @media (max-width: 768px) {
+      .feed-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .feed-sidebar {
+        position: static;
+        margin-bottom: var(--spacing-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-logo">
+        <a href="index.html">
+          <span class="neon-text">LAB</span>_WEB
+        </a>
+      </div>
+      
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="feed.html" class="active">Feed</a>
+        <a href="gallery.html">Gallery</a>
+      </div>
+      
+      <div class="navbar-auth">
+        <button class="btn-login">Login</button>
+        <button class="btn-signup">Sign Up</button>
+      </div>
+      
+      <div class="navbar-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="feed-container">
+      <!-- Sidebar -->
+      <aside class="feed-sidebar">
+        <div class="user-profile">
+          <div class="user-avatar">JD</div>
+          <h3 class="user-name">John Doe</h3>
+          <p class="user-role">AI Researcher</p>
+          <div class="user-badges">
+            <span class="badge highlighted">Lab Member</span>
+            <span class="badge">Contributor</span>
+          </div>
+        </div>
+        
+        <div class="feed-categories">
+          <h3>FEED FILTER</h3>
+          <ul class="category-list">
+            <li><a href="#" class="active">All Posts <span class="category-count">28</span></a></li>
+            <li><a href="#">Research <span class="category-count">12</span></a></li>
+            <li><a href="#">Projects <span class="category-count">8</span></a></li>
+            <li><a href="#">Announcements <span class="category-count">5</span></a></li>
+            <li><a href="#">Events <span class="category-count">3</span></a></li>
+          </ul>
+        </div>
+        
+        <div class="trending-topics">
+          <h3>TRENDING TOPICS</h3>
+          <div class="topic-list">
+            <a href="#" class="topic-tag">#quantum</a>
+            <a href="#" class="topic-tag">#neural</a>
+            <a href="#" class="topic-tag">#machinelearning</a>
+            <a href="#" class="topic-tag">#hackathon</a>
+            <a href="#" class="topic-tag">#research</a>
+            <a href="#" class="topic-tag">#AI</a>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Feed -->
+      <div class="feed-content">
+        <!-- Post Form -->
+        <div class="post-form">
+          <textarea placeholder="Share your research, ideas, or questions..."></textarea>
+          <div class="post-actions">
+            <div class="post-attachments">
+              <button class="attachment-btn">
+                <span>+ Image</span>
+              </button>
+              <button class="attachment-btn">
+                <span>+ File</span>
+              </button>
+            </div>
+            <button class="btn-primary">Post</button>
+          </div>
+        </div>
+        
+        <!-- Posts -->
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-avatar">DR</div>
+            <div class="post-author">
+              <h4>Dr. Rachel Chen</h4>
+              <span class="post-time">2 hours ago</span>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>Excited to announce that our paper "Quantum Entanglement in Neural Network Architectures" has been accepted for publication in the Journal of Quantum Computing! Thanks to everyone in the lab who contributed to this groundbreaking research. #quantum #machinelearning</p>
+          </div>
+          <div class="post-media">
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80" alt="Quantum Computing Visualization">
+          </div>
+          <div class="post-footer">
+            <div class="post-action">
+              <span>♥</span>
+              <span>35 Likes</span>
+            </div>
+            <div class="post-action">
+              <span>💬</span>
+              <span>12 Comments</span>
+            </div>
+            <div class="post-action">
+              <span>⟲</span>
+              <span>Share</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-avatar">AM</div>
+            <div class="post-author">
+              <h4>Alex Mercer</h4>
+              <span class="post-time">Yesterday</span>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>Looking for collaborators on a new project involving holographic displays with haptic feedback. We've developed a promising prototype that can create stable projections with basic tactile response. If interested, please DM me or stop by Lab 3.</p>
+          </div>
+          <div class="post-footer">
+            <div class="post-action">
+              <span>♥</span>
+              <span>28 Likes</span>
+            </div>
+            <div class="post-action">
+              <span>💬</span>
+              <span>8 Comments</span>
+            </div>
+            <div class="post-action">
+              <span>⟲</span>
+              <span>Share</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-avatar">SJ</div>
+            <div class="post-author">
+              <h4>Dr. Sarah Johnson</h4>
+              <span class="post-time">2 days ago</span>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>Lab meeting summary: We discussed progress on the neural interface project, budget allocations for Q3, and upcoming conference deadlines. The quantum team reported significant breakthroughs in qubit stability under variable temperature conditions. Next meeting scheduled for Friday at 2PM.</p>
+          </div>
+          <div class="post-footer">
+            <div class="post-action">
+              <span>♥</span>
+              <span>15 Likes</span>
+            </div>
+            <div class="post-action">
+              <span>💬</span>
+              <span>5 Comments</span>
+            </div>
+            <div class="post-action">
+              <span>⟲</span>
+              <span>Share</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <span class="neon-text">LAB</span>_WEB
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="projects.html">Projects</a></li>
+              <li><a href="feed.html">Feed</a></li>
+              <li><a href="gallery.html">Gallery</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-col">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#">Documentation</a></li>
+              <li><a href="#">Research Papers</a></li>
+              <li><a href="#">Lab Tools</a></li>
+              <li><a href="#">Equipment</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a href="#">Email Us</a></li>
+              <li><a href="#">Location</a></li>
+              <li><a href="#">Social Media</a></li>
+              <li><a href="#">Support</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 LAB_WEB. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Login to <span class="neon-text">LAB</span>_WEB</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <button type="submit" class="btn-primary btn-block">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Join <span class="neon-text">LAB</span>_WEB</h2>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-role">Role</label>
+          <select id="signup-role" required>
+            <option value="">Select your role</option>
+            <option value="student">Student</option>
+            <option value="researcher">Researcher</option>
+            <option value="faculty">Faculty</option>
+            <option value="industry">Industry Partner</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary btn-block">Request Access</button>
+        <p class="form-note">All registrations require admin approval</p>
+      </form>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
