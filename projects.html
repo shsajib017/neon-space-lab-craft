@@ -1,687 +1,728 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects | LAB_WEB_MASTERPLAN</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
-  <style>
-    /* Projects page specific styles */
-    .projects-header {
-      padding-top: calc(var(--navbar-height) + var(--spacing-lg));
-      padding-bottom: var(--spacing-lg);
-      text-align: center;
-    }
-    
-    .projects-header h1 {
-      margin-bottom: var(--spacing-md);
-    }
-    
-    .projects-filters {
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      padding: var(--spacing-lg);
-      margin-bottom: var(--spacing-xl);
-      border: 1px solid var(--border);
-    }
-    
-    .filter-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-lg);
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .filter-group {
-      flex: 1;
-      min-width: 200px;
-    }
-    
-    .filter-group label {
-      display: block;
-      margin-bottom: var(--spacing-xs);
-      font-family: var(--font-heading);
-      font-size: 0.9rem;
-    }
-    
-    .filter-group select {
-      width: 100%;
-      padding: 0.7rem var(--spacing-md);
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      color: var(--text);
-      font-family: var(--font-body);
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 16px 12px;
-    }
-    
-    .filter-group select:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
-    
-    .search-filter {
-      position: relative;
-      flex-grow: 2;
-      min-width: 300px;
-    }
-    
-    .search-filter input {
-      width: 100%;
-      padding: 0.7rem var(--spacing-md);
-      padding-left: 40px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      color: var(--text);
-      font-family: var(--font-body);
-    }
-    
-    .search-filter input:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
-    
-    .search-filter::before {
-      content: '🔍';
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-secondary);
-    }
-    
-    .filter-buttons {
-      display: flex;
-      gap: var(--spacing-md);
-      margin-top: var(--spacing-md);
-    }
-    
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: var(--spacing-lg);
-      margin-bottom: var(--spacing-xl);
-    }
-    
-    .project-card {
-      height: auto;
-      min-height: 350px;
-    }
-    
-    .project-card-inner {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    
-    .project-header {
-      margin-bottom: var(--spacing-md);
-    }
-    
-    .project-image {
-      width: 100%;
-      height: 180px;
-      overflow: hidden;
-      border-radius: var(--border-radius);
-      margin-bottom: var(--spacing-md);
-      border: 1px solid var(--border);
-    }
-    
-    .project-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    .project-card:hover .project-image img {
-      transform: scale(1.05);
-    }
-    
-    .project-content {
-      flex-grow: 1;
-      margin-bottom: var(--spacing-md);
-    }
-    
-    .project-stats {
-      display: flex;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-md);
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-    
-    .project-stat {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .project-footer {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-lg);
-    }
-    
-    .pagination-item {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .pagination-item:hover {
-      border-color: var(--secondary);
-      color: var(--secondary);
-    }
-    
-    .pagination-item.active {
-      background: rgba(0, 245, 255, 0.1);
-      color: var(--secondary);
-      border-color: var(--secondary);
-      box-shadow: var(--glow);
-    }
-    
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects | LAB_WEB_MASTERPLAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* Projects page specific styles */
+      .projects-header {
+        padding-top: calc(var(--navbar-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-lg);
+        text-align: center;
+      }
+
+      .projects-header h1 {
+        margin-bottom: var(--spacing-md);
+      }
+
+      .projects-filters {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+        border: 1px solid var(--border);
+      }
+
       .filter-row {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        align-items: stretch;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-lg);
+        justify-content: space-between;
+        align-items: center;
       }
-      
-      .search-filter, 
+
       .filter-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .filter-group label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+      }
+
+      .filter-group select {
         width: 100%;
+        padding: 0.7rem var(--spacing-md);
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border);
+        border-radius: var(--border-radius);
+        color: var(--text);
+        font-family: var(--font-body);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
       }
-      
+
+      .filter-group select:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .search-filter {
+        position: relative;
+        flex-grow: 2;
+        min-width: 300px;
+      }
+
+      .search-filter input {
+        width: 100%;
+        padding: 0.7rem var(--spacing-md);
+        padding-left: 40px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border);
+        border-radius: var(--border-radius);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+
+      .search-filter input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .search-filter::before {
+        content: "🔍";
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+      }
+
       .project-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
       }
-    }
-  </style>
-</head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-logo">
-        <a href="index.html">
-          <span class="neon-text">LAB</span>_WEB
-        </a>
-      </div>
-      
-      <div class="navbar-links">
-        <a href="index.html">Home</a>
-        <a href="projects.html" class="active">Projects</a>
-        <a href="feed.html">Feed</a>
-        <a href="gallery.html">Gallery</a>
-      </div>
-      
-      <div class="navbar-auth">
-        <button class="btn-login">Login</button>
-        <button class="btn-signup">Sign Up</button>
-      </div>
-      
-      <div class="navbar-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
 
-  <main>
-    <!-- Projects Header -->
-    <section class="projects-header">
+      .project-card {
+        height: auto;
+        min-height: 350px;
+      }
+
+      .project-card-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .project-header {
+        margin-bottom: var(--spacing-md);
+      }
+
+      .project-image {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+        margin-bottom: var(--spacing-md);
+        border: 1px solid var(--border);
+      }
+
+      .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .project-card:hover .project-image img {
+        transform: scale(1.05);
+      }
+
+      .project-content {
+        flex-grow: 1;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .project-stats {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .project-stat {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .project-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-lg);
+      }
+
+      .pagination-item {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .pagination-item:hover {
+        border-color: var(--secondary);
+        color: var(--secondary);
+      }
+
+      .pagination-item.active {
+        background: rgba(0, 245, 255, 0.1);
+        color: var(--secondary);
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      @media (max-width: 768px) {
+        .filter-row {
+          flex-direction: column;
+          gap: var(--spacing-md);
+          align-items: stretch;
+        }
+
+        .search-filter,
+        .filter-group {
+          width: 100%;
+        }
+
+        .project-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
       <div class="container">
-        <h1>Project <span class="neon-text">Showcase</span></h1>
-        <p>Explore cutting-edge research and technology innovations from our lab</p>
+        <div class="navbar-logo">
+          <a href="index.html"> <span class="neon-text">ME</span>SL </a>
+        </div>
+
+        <div class="navbar-links">
+          <a href="index.html">Home</a>
+          <a href="projects.html" class="active">Projects</a>
+          <a href="feed.html">Feed</a>
+          <a href="gallery.html">Gallery</a>
+        </div>
+
+        <div class="navbar-auth">
+          <button class="btn-login">Login</button>
+          <button class="btn-signup">Sign Up</button>
+        </div>
+
+        <div class="navbar-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
-    </section>
-    
-    <!-- Filters -->
-    <div class="container">
-      <div class="projects-filters">
-        <div class="filter-row">
-          <div class="filter-group">
-            <label for="tech-filter">Technology</label>
-            <select id="tech-filter">
-              <option value="">All Technologies</option>
-              <option value="ai">AI & Machine Learning</option>
-              <option value="quantum">Quantum Computing</option>
-              <option value="vr">VR & AR</option>
-              <option value="robotics">Robotics</option>
-              <option value="bio">Biotechnology</option>
+    </nav>
+
+    <main>
+      <!-- Projects Header -->
+      <section class="projects-header">
+        <div class="container">
+          <h1>Project <span class="neon-text">Showcase</span></h1>
+          <p>
+            Explore cutting-edge research and technology innovations from our
+            lab
+          </p>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <div class="container">
+        <div class="projects-filters">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="tech-filter">Technology</label>
+              <select id="tech-filter">
+                <option value="">All Technologies</option>
+                <option value="ai">AI & Machine Learning</option>
+                <option value="quantum">Quantum Computing</option>
+                <option value="vr">VR & AR</option>
+                <option value="robotics">Robotics</option>
+                <option value="bio">Biotechnology</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="year-filter">Year</label>
+              <select id="year-filter">
+                <option value="">All Years</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="status-filter">Status</label>
+              <select id="status-filter">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="proposed">Proposed</option>
+              </select>
+            </div>
+
+            <div class="search-filter">
+              <input type="text" placeholder="Search projects..." />
+            </div>
+          </div>
+
+          <div class="filter-buttons">
+            <button class="btn-primary" id="filter-apply">Apply Filters</button>
+            <button class="btn-secondary" id="filter-reset">Reset</button>
+          </div>
+        </div>
+
+        <!-- Project Grid -->
+        <div class="project-grid">
+          <!-- Project 1 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Neural Interface Project"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Neural Interface</h3>
+                <div class="project-tech">
+                  <span>AI</span>
+                  <span>ML</span>
+                  <span>Neural Networks</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Brain-computer interface technology that translates neural
+                  signals into digital commands with unprecedented accuracy and
+                  speed.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Alpha</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2025</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge highlighted">Active</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1569402928543-eeaf8e333de6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Quantum Computing Project"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Quantum Computing</h3>
+                <div class="project-tech">
+                  <span>Quantum</span>
+                  <span>Physics</span>
+                  <span>Computing</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Experimental quantum bit stabilization for next-generation
+                  quantum computers, exploring new approaches to quantum error
+                  correction.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Quantum</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2024</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge highlighted">Active</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Holographic Display Project"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Holographic Display</h3>
+                <div class="project-tech">
+                  <span>Optics</span>
+                  <span>AR</span>
+                  <span>3D</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Free-floating holographic projections with haptic feedback and
+                  gesture control for interactive visualization and modeling.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Visionaries</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2024</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge highlighted">Active</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2036&q=80"
+                  alt="Autonomous Drone Swarm"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Autonomous Drone Swarm</h3>
+                <div class="project-tech">
+                  <span>Robotics</span>
+                  <span>AI</span>
+                  <span>Swarm Intelligence</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Self-organizing drone swarms capable of complex collaborative
+                  tasks and environmental adaptation in real-time.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Aeronautics</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2023</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge">Completed</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 5 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1532187643603-ba119ca4109e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Molecular Simulator"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Molecular Simulator</h3>
+                <div class="project-tech">
+                  <span>Biotechnology</span>
+                  <span>Quantum</span>
+                  <span>Simulation</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Advanced quantum-based simulator for molecular interactions
+                  with applications in drug discovery and material science.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Molecular</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2023</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge">Completed</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 6 -->
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-image">
+                <img
+                  src="https://images.unsplash.com/photo-1617791160536-598cf32026fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
+                  alt="Neural Imaging"
+                />
+              </div>
+              <div class="project-header">
+                <h3>Neural Imaging</h3>
+                <div class="project-tech">
+                  <span>Neuroscience</span>
+                  <span>Imaging</span>
+                  <span>AI</span>
+                </div>
+              </div>
+              <div class="project-content">
+                <p>
+                  Non-invasive neural activity visualization with unprecedented
+                  resolution for research and medical applications.
+                </p>
+              </div>
+              <div class="project-stats">
+                <div class="project-stat">
+                  <span>👥</span>
+                  <span>Team Neuron</span>
+                </div>
+                <div class="project-stat">
+                  <span>📅</span>
+                  <span>2025</span>
+                </div>
+              </div>
+              <div class="project-footer">
+                <div class="project-status">
+                  <span class="badge">Proposed</span>
+                </div>
+                <button class="btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-item">«</div>
+          <div class="pagination-item active">1</div>
+          <div class="pagination-item">2</div>
+          <div class="pagination-item">3</div>
+          <div class="pagination-item">»</div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo"><span class="neon-text">ME</span>SL</div>
+
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="feed.html">Feed</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Research Papers</a></li>
+                <li><a href="#">Lab Tools</a></li>
+                <li><a href="#">Equipment</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="#">Email Us</a></li>
+                <li><a href="#">Location</a></li>
+                <li><a href="#">Social Media</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 MESL. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Login to <span class="neon-text">ME</span>SL</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required />
+          </div>
+          <button type="submit" class="btn-primary btn-block">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Join <span class="neon-text">ME</span>SL</h2>
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-role">Role</label>
+            <select id="signup-role" required>
+              <option value="">Select your role</option>
+              <option value="student">Student</option>
+              <option value="researcher">Researcher</option>
+              <option value="faculty">Faculty</option>
+              <option value="industry">Industry Partner</option>
             </select>
           </div>
-          
-          <div class="filter-group">
-            <label for="year-filter">Year</label>
-            <select id="year-filter">
-              <option value="">All Years</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-            </select>
-          </div>
-          
-          <div class="filter-group">
-            <label for="status-filter">Status</label>
-            <select id="status-filter">
-              <option value="">All Statuses</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="proposed">Proposed</option>
-            </select>
-          </div>
-          
-          <div class="search-filter">
-            <input type="text" placeholder="Search projects...">
-          </div>
-        </div>
-        
-        <div class="filter-buttons">
-          <button class="btn-primary" id="filter-apply">Apply Filters</button>
-          <button class="btn-secondary" id="filter-reset">Reset</button>
-        </div>
-      </div>
-      
-      <!-- Project Grid -->
-      <div class="project-grid">
-        <!-- Project 1 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Neural Interface Project">
-            </div>
-            <div class="project-header">
-              <h3>Neural Interface</h3>
-              <div class="project-tech">
-                <span>AI</span>
-                <span>ML</span>
-                <span>Neural Networks</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Brain-computer interface technology that translates neural signals into digital commands with unprecedented accuracy and speed.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Alpha</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2025</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge highlighted">Active</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Project 2 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1569402928543-eeaf8e333de6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Quantum Computing Project">
-            </div>
-            <div class="project-header">
-              <h3>Quantum Computing</h3>
-              <div class="project-tech">
-                <span>Quantum</span>
-                <span>Physics</span>
-                <span>Computing</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Experimental quantum bit stabilization for next-generation quantum computers, exploring new approaches to quantum error correction.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Quantum</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2024</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge highlighted">Active</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Project 3 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Holographic Display Project">
-            </div>
-            <div class="project-header">
-              <h3>Holographic Display</h3>
-              <div class="project-tech">
-                <span>Optics</span>
-                <span>AR</span>
-                <span>3D</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Free-floating holographic projections with haptic feedback and gesture control for interactive visualization and modeling.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Visionaries</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2024</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge highlighted">Active</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Project 4 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2036&q=80" alt="Autonomous Drone Swarm">
-            </div>
-            <div class="project-header">
-              <h3>Autonomous Drone Swarm</h3>
-              <div class="project-tech">
-                <span>Robotics</span>
-                <span>AI</span>
-                <span>Swarm Intelligence</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Self-organizing drone swarms capable of complex collaborative tasks and environmental adaptation in real-time.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Aeronautics</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2023</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge">Completed</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Project 5 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1532187643603-ba119ca4109e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Molecular Simulator">
-            </div>
-            <div class="project-header">
-              <h3>Molecular Simulator</h3>
-              <div class="project-tech">
-                <span>Biotechnology</span>
-                <span>Quantum</span>
-                <span>Simulation</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Advanced quantum-based simulator for molecular interactions with applications in drug discovery and material science.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Molecular</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2023</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge">Completed</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Project 6 -->
-        <div class="project-card">
-          <div class="project-card-inner">
-            <div class="project-image">
-              <img src="https://images.unsplash.com/photo-1617791160536-598cf32026fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Neural Imaging">
-            </div>
-            <div class="project-header">
-              <h3>Neural Imaging</h3>
-              <div class="project-tech">
-                <span>Neuroscience</span>
-                <span>Imaging</span>
-                <span>AI</span>
-              </div>
-            </div>
-            <div class="project-content">
-              <p>Non-invasive neural activity visualization with unprecedented resolution for research and medical applications.</p>
-            </div>
-            <div class="project-stats">
-              <div class="project-stat">
-                <span>👥</span>
-                <span>Team Neuron</span>
-              </div>
-              <div class="project-stat">
-                <span>📅</span>
-                <span>2025</span>
-              </div>
-            </div>
-            <div class="project-footer">
-              <div class="project-status">
-                <span class="badge">Proposed</span>
-              </div>
-              <button class="btn-view">View Details</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Pagination -->
-      <div class="pagination">
-        <div class="pagination-item">«</div>
-        <div class="pagination-item active">1</div>
-        <div class="pagination-item">2</div>
-        <div class="pagination-item">3</div>
-        <div class="pagination-item">»</div>
+          <button type="submit" class="btn-primary btn-block">
+            Request Access
+          </button>
+          <p class="form-note">All registrations require admin approval</p>
+        </form>
       </div>
     </div>
-  </main>
 
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <span class="neon-text">LAB</span>_WEB
-        </div>
-        
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>Navigation</h4>
-            <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="projects.html">Projects</a></li>
-              <li><a href="feed.html">Feed</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-col">
-            <h4>Resources</h4>
-            <ul>
-              <li><a href="#">Documentation</a></li>
-              <li><a href="#">Research Papers</a></li>
-              <li><a href="#">Lab Tools</a></li>
-              <li><a href="#">Equipment</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-col">
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="#">Email Us</a></li>
-              <li><a href="#">Location</a></li>
-              <li><a href="#">Social Media</a></li>
-              <li><a href="#">Support</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 LAB_WEB. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+    <script src="./app.js"></script>
+    <script>
+      // Projects page specific JavaScript
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterApplyBtn = document.getElementById("filter-apply");
+        const filterResetBtn = document.getElementById("filter-reset");
+        const techFilter = document.getElementById("tech-filter");
+        const yearFilter = document.getElementById("year-filter");
+        const statusFilter = document.getElementById("status-filter");
+        const searchInput = document.querySelector(".search-filter input");
 
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h2>Login to <span class="neon-text">LAB</span>_WEB</h2>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="login-email">Email</label>
-          <input type="email" id="login-email" required>
-        </div>
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <input type="password" id="login-password" required>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Login</button>
-      </form>
-    </div>
-  </div>
+        if (filterApplyBtn) {
+          filterApplyBtn.addEventListener("click", function () {
+            console.log("Filters applied:", {
+              tech: techFilter.value,
+              year: yearFilter.value,
+              status: statusFilter.value,
+              search: searchInput.value,
+            });
 
-  <!-- Signup Modal -->
-  <div class="modal" id="signupModal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h2>Join <span class="neon-text">LAB</span>_WEB</h2>
-      <form id="signupForm">
-        <div class="form-group">
-          <label for="signup-name">Full Name</label>
-          <input type="text" id="signup-name" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-role">Role</label>
-          <select id="signup-role" required>
-            <option value="">Select your role</option>
-            <option value="student">Student</option>
-            <option value="researcher">Researcher</option>
-            <option value="faculty">Faculty</option>
-            <option value="industry">Industry Partner</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Request Access</button>
-        <p class="form-note">All registrations require admin approval</p>
-      </form>
-    </div>
-  </div>
-
-  <script src="./app.js"></script>
-  <script>
-    // Projects page specific JavaScript
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterApplyBtn = document.getElementById('filter-apply');
-      const filterResetBtn = document.getElementById('filter-reset');
-      const techFilter = document.getElementById('tech-filter');
-      const yearFilter = document.getElementById('year-filter');
-      const statusFilter = document.getElementById('status-filter');
-      const searchInput = document.querySelector('.search-filter input');
-      
-      if (filterApplyBtn) {
-        filterApplyBtn.addEventListener('click', function() {
-          console.log('Filters applied:', {
-            tech: techFilter.value,
-            year: yearFilter.value,
-            status: statusFilter.value,
-            search: searchInput.value
+            // This would normally filter projects using the filterProjects function
+            alert("Filtering functionality will be implemented in Phase 2");
           });
-          
-          // This would normally filter projects using the filterProjects function
-          alert('Filtering functionality will be implemented in Phase 2');
-        });
-      }
-      
-      if (filterResetBtn) {
-        filterResetBtn.addEventListener('click', function() {
-          if (techFilter) techFilter.value = '';
-          if (yearFilter) yearFilter.value = '';
-          if (statusFilter) statusFilter.value = '';
-          if (searchInput) searchInput.value = '';
-        });
-      }
-      
-      // Pagination
-      const paginationItems = document.querySelectorAll('.pagination-item');
-      paginationItems.forEach(item => {
-        item.addEventListener('click', function() {
-          paginationItems.forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
+        }
+
+        if (filterResetBtn) {
+          filterResetBtn.addEventListener("click", function () {
+            if (techFilter) techFilter.value = "";
+            if (yearFilter) yearFilter.value = "";
+            if (statusFilter) statusFilter.value = "";
+            if (searchInput) searchInput.value = "";
+          });
+        }
+
+        // Pagination
+        const paginationItems = document.querySelectorAll(".pagination-item");
+        paginationItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            paginationItems.forEach((i) => i.classList.remove("active"));
+            this.classList.add("active");
+          });
         });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
