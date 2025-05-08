@@ -1,589 +1,641 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery | Modern Engineering Systems Laboratory</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
-  <style>
-    /* Gallery specific styles */
-    .gallery-header {
-      padding-top: calc(var(--navbar-height) + var(--spacing-lg));
-      padding-bottom: var(--spacing-lg);
-      text-align: center;
-    }
-    
-    .gallery-filters {
-      display: flex;
-      justify-content: center;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-lg);
-      flex-wrap: wrap;
-    }
-    
-    .filter-btn {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      padding: var(--spacing-xs) var(--spacing-md);
-      border-radius: var(--border-radius);
-      font-family: var(--font-heading);
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-    }
-    
-    .filter-btn:hover,
-    .filter-btn.active {
-      background: rgba(0, 245, 255, 0.1);
-      color: var(--secondary);
-      border-color: var(--secondary);
-      box-shadow: var(--glow);
-    }
-    
-    .filter-btn.active {
-      background: rgba(0, 245, 255, 0.2);
-    }
-    
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-xl);
-    }
-    
-    .gallery-item {
-      border-radius: var(--card-radius);
-      overflow: hidden;
-      position: relative;
-      aspect-ratio: 4/3;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    
-    .gallery-item:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--glow);
-      border-color: var(--secondary);
-    }
-    
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    .gallery-item:hover img {
-      transform: scale(1.05);
-    }
-    
-    .gallery-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 18, 51, 0.8);
-      backdrop-filter: blur(5px);
-      padding: var(--spacing-md);
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-    
-    .gallery-item:hover .gallery-overlay {
-      transform: translateY(0);
-    }
-    
-    .gallery-overlay h3 {
-      margin-bottom: var(--spacing-xs);
-      font-size: 1.1rem;
-    }
-    
-    .gallery-overlay p {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: var(--spacing-xs);
-    }
-    
-    .gallery-overlay .gallery-tags {
-      display: flex;
-      gap: var(--spacing-xs);
-      flex-wrap: wrap;
-    }
-    
-    .gallery-overlay .gallery-tags span {
-      background: rgba(4, 102, 200, 0.3);
-      padding: 2px 6px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-    }
-    
-    .gallery-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--overlay);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .gallery-modal.active {
-      display: flex;
-    }
-    
-    .gallery-modal-content {
-      max-width: 80%;
-      max-height: 80vh;
-      position: relative;
-    }
-    
-    .gallery-modal-content img {
-      max-width: 100%;
-      max-height: 80vh;
-      border-radius: var(--card-radius);
-      border: 1px solid var(--border);
-    }
-    
-    .gallery-modal-close {
-      position: absolute;
-      top: -20px;
-      right: -20px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .gallery-modal-close:hover {
-      background: var(--secondary);
-      color: var(--primary);
-    }
-    
-    .gallery-modal-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .gallery-modal-prev {
-      left: -25px;
-    }
-    
-    .gallery-modal-next {
-      right: -25px;
-    }
-    
-    .gallery-modal-nav:hover {
-      background: var(--secondary);
-      color: var(--primary);
-    }
-    
-    .gallery-modal-caption {
-      position: absolute;
-      bottom: -40px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: var(--text-secondary);
-    }
-    
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery | Modern Engineering Systems Laboratory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* Gallery specific styles */
+      .gallery-header {
+        padding-top: calc(var(--navbar-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-lg);
+        text-align: center;
+      }
+
+      .gallery-filters {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--border-radius);
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: rgba(0, 245, 255, 0.1);
+        color: var(--secondary);
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      .filter-btn.active {
+        background: rgba(0, 245, 255, 0.2);
+      }
+
       .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
       }
-      
+
+      .gallery-item {
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        position: relative;
+        aspect-ratio: 4/3;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--glow);
+        border-color: var(--secondary);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 18, 51, 0.8);
+        backdrop-filter: blur(5px);
+        padding: var(--spacing-md);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+      }
+
+      .gallery-overlay h3 {
+        margin-bottom: var(--spacing-xs);
+        font-size: 1.1rem;
+      }
+
+      .gallery-overlay p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .gallery-overlay .gallery-tags {
+        display: flex;
+        gap: var(--spacing-xs);
+        flex-wrap: wrap;
+      }
+
+      .gallery-overlay .gallery-tags span {
+        background: rgba(4, 102, 200, 0.3);
+        padding: 2px 6px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+      }
+
+      .gallery-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--overlay);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .gallery-modal.active {
+        display: flex;
+      }
+
       .gallery-modal-content {
-        max-width: 95%;
+        max-width: 80%;
+        max-height: 80vh;
+        position: relative;
       }
-      
-      .gallery-modal-nav {
+
+      .gallery-modal-content img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: var(--card-radius);
+        border: 1px solid var(--border);
+      }
+
+      .gallery-modal-close {
+        position: absolute;
+        top: -20px;
+        right: -20px;
         width: 40px;
         height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
       }
-      
+
+      .gallery-modal-close:hover {
+        background: var(--secondary);
+        color: var(--primary);
+      }
+
+      .gallery-modal-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
       .gallery-modal-prev {
-        left: -15px;
+        left: -25px;
       }
-      
+
       .gallery-modal-next {
-        right: -15px;
+        right: -25px;
       }
-    }
-  </style>
-</head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar">
+
+      .gallery-modal-nav:hover {
+        background: var(--secondary);
+        color: var(--primary);
+      }
+
+      .gallery-modal-caption {
+        position: absolute;
+        bottom: -40px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: var(--text-secondary);
+      }
+
+      @media (max-width: 768px) {
+        .gallery-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .gallery-modal-content {
+          max-width: 95%;
+        }
+
+        .gallery-modal-nav {
+          width: 40px;
+          height: 40px;
+        }
+
+        .gallery-modal-prev {
+          left: -15px;
+        }
+
+        .gallery-modal-next {
+          right: -15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="index.html"> <span class="neon-text">ME</span>SL </a>
+        </div>
+
+        <div class="navbar-links">
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="feed.html">Feed</a>
+          <a href="gallery.html" class="active">Gallery</a>
+        </div>
+
+        <div class="navbar-auth">
+          <button class="btn-login">Login</button>
+          <button class="btn-signup">Sign Up</button>
+        </div>
+
+        <div class="navbar-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
     <div class="container">
-      <div class="navbar-logo">
-        <a href="index.html">
-          <span class="neon-text">LAB</span>_WEB
-        </a>
+      <div class="gallery-header">
+        <h1>Research <span class="neon-text">Gallery</span></h1>
+        <p>Visual showcase of our lab's equipment, experiments, and results</p>
       </div>
-      
-      <div class="navbar-links">
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="feed.html">Feed</a>
-        <a href="gallery.html" class="active">Gallery</a>
-      </div>
-      
-      <div class="navbar-auth">
-        <button class="btn-login">Login</button>
-        <button class="btn-signup">Sign Up</button>
-      </div>
-      
-      <div class="navbar-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
 
-  <div class="container">
-    <div class="gallery-header">
-      <h1>Research <span class="neon-text">Gallery</span></h1>
-      <p>Visual showcase of our lab's equipment, experiments, and results</p>
-    </div>
-    
-    <div class="gallery-filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="equipment">Equipment</button>
-      <button class="filter-btn" data-filter="experiments">Experiments</button>
-      <button class="filter-btn" data-filter="results">Results</button>
-      <button class="filter-btn" data-filter="team">Team</button>
-    </div>
-    
-    <div class="gallery-grid">
-      <!-- Gallery Item 1 -->
-      <div class="gallery-item" data-category="equipment">
-        <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Quantum Computer Prototype">
-        <div class="gallery-overlay">
-          <h3>Quantum Computer Prototype</h3>
-          <p>Our latest 16-qubit quantum processor with superconducting circuits.</p>
-          <div class="gallery-tags">
-            <span>Equipment</span>
-            <span>Quantum</span>
-          </div>
-        </div>
+      <div class="gallery-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="equipment">Equipment</button>
+        <button class="filter-btn" data-filter="experiments">
+          Experiments
+        </button>
+        <button class="filter-btn" data-filter="results">Results</button>
+        <button class="filter-btn" data-filter="team">Team</button>
       </div>
-      
-      <!-- Gallery Item 2 -->
-      <div class="gallery-item" data-category="experiments">
-        <img src="https://images.unsplash.com/photo-1581091007718-0c50d599bfd0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Neural Interface Testing">
-        <div class="gallery-overlay">
-          <h3>Neural Interface Testing</h3>
-          <p>Experimental setup for testing our non-invasive neural interface.</p>
-          <div class="gallery-tags">
-            <span>Experiment</span>
-            <span>Neural</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 3 -->
-      <div class="gallery-item" data-category="results">
-        <img src="https://images.unsplash.com/photo-1581093458791-9d2ebaf8cdc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Quantum Entanglement Visualization">
-        <div class="gallery-overlay">
-          <h3>Quantum Entanglement Visualization</h3>
-          <p>Visual representation of quantum entanglement patterns observed in our experiments.</p>
-          <div class="gallery-tags">
-            <span>Results</span>
-            <span>Quantum</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 4 -->
-      <div class="gallery-item" data-category="team">
-        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Team Quantum">
-        <div class="gallery-overlay">
-          <h3>Team Quantum</h3>
-          <p>Our quantum computing research team during the annual symposium.</p>
-          <div class="gallery-tags">
-            <span>Team</span>
-            <span>Events</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 5 -->
-      <div class="gallery-item" data-category="equipment">
-        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Neural Signal Processor">
-        <div class="gallery-overlay">
-          <h3>Neural Signal Processor</h3>
-          <p>Custom-designed hardware for processing neural signals with microsecond latency.</p>
-          <div class="gallery-tags">
-            <span>Equipment</span>
-            <span>Neural</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 6 -->
-      <div class="gallery-item" data-category="experiments">
-        <img src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Drone Swarm Test">
-        <div class="gallery-overlay">
-          <h3>Drone Swarm Test</h3>
-          <p>Testing autonomous coordination algorithms with our drone swarm platform.</p>
-          <div class="gallery-tags">
-            <span>Experiment</span>
-            <span>Robotics</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 7 -->
-      <div class="gallery-item" data-category="results">
-        <img src="https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Neural Network Visualization">
-        <div class="gallery-overlay">
-          <h3>Neural Network Visualization</h3>
-          <p>3D visualization of our quantum-enhanced neural network during training.</p>
-          <div class="gallery-tags">
-            <span>Results</span>
-            <span>AI</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery Item 8 -->
-      <div class="gallery-item" data-category="team">
-        <img src="https://images.unsplash.com/photo-1581093804475-577d72e13ff5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Lab Open House">
-        <div class="gallery-overlay">
-          <h3>Lab Open House</h3>
-          <p>Annual open house event showcasing our research to the public.</p>
-          <div class="gallery-tags">
-            <span>Team</span>
-            <span>Events</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Gallery Modal -->
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-content">
-      <img id="modalImage" src="" alt="">
-      <button class="gallery-modal-close">&times;</button>
-      <button class="gallery-modal-nav gallery-modal-prev">&lt;</button>
-      <button class="gallery-modal-nav gallery-modal-next">&gt;</button>
-      <div class="gallery-modal-caption" id="modalCaption"></div>
-    </div>
-  </div>
 
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <span class="neon-text">LAB</span>_WEB
+      <div class="gallery-grid">
+        <!-- Gallery Item 1 -->
+        <div class="gallery-item" data-category="equipment">
+          <img
+            src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Quantum Computer Prototype"
+          />
+          <div class="gallery-overlay">
+            <h3>Quantum Computer Prototype</h3>
+            <p>
+              Our latest 16-qubit quantum processor with superconducting
+              circuits.
+            </p>
+            <div class="gallery-tags">
+              <span>Equipment</span>
+              <span>Quantum</span>
+            </div>
+          </div>
         </div>
-        
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>Navigation</h4>
-            <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="projects.html">Projects</a></li>
-              <li><a href="feed.html">Feed</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
-            </ul>
+
+        <!-- Gallery Item 2 -->
+        <div class="gallery-item" data-category="experiments">
+          <img
+            src="https://images.unsplash.com/photo-1581091007718-0c50d599bfd0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Neural Interface Testing"
+          />
+          <div class="gallery-overlay">
+            <h3>Neural Interface Testing</h3>
+            <p>
+              Experimental setup for testing our non-invasive neural interface.
+            </p>
+            <div class="gallery-tags">
+              <span>Experiment</span>
+              <span>Neural</span>
+            </div>
           </div>
-          
-          <div class="footer-col">
-            <h4>Resources</h4>
-            <ul>
-              <li><a href="#">Documentation</a></li>
-              <li><a href="#">Research Papers</a></li>
-              <li><a href="#">Lab Tools</a></li>
-              <li><a href="#">Equipment</a></li>
-            </ul>
+        </div>
+
+        <!-- Gallery Item 3 -->
+        <div class="gallery-item" data-category="results">
+          <img
+            src="https://images.unsplash.com/photo-1581093458791-9d2ebaf8cdc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Quantum Entanglement Visualization"
+          />
+          <div class="gallery-overlay">
+            <h3>Quantum Entanglement Visualization</h3>
+            <p>
+              Visual representation of quantum entanglement patterns observed in
+              our experiments.
+            </p>
+            <div class="gallery-tags">
+              <span>Results</span>
+              <span>Quantum</span>
+            </div>
           </div>
-          
-          <div class="footer-col">
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="#">Email Us</a></li>
-              <li><a href="#">Location</a></li>
-              <li><a href="#">Social Media</a></li>
-              <li><a href="#">Support</a></li>
-            </ul>
+        </div>
+
+        <!-- Gallery Item 4 -->
+        <div class="gallery-item" data-category="team">
+          <img
+            src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Team Quantum"
+          />
+          <div class="gallery-overlay">
+            <h3>Team Quantum</h3>
+            <p>
+              Our quantum computing research team during the annual symposium.
+            </p>
+            <div class="gallery-tags">
+              <span>Team</span>
+              <span>Events</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Item 5 -->
+        <div class="gallery-item" data-category="equipment">
+          <img
+            src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Neural Signal Processor"
+          />
+          <div class="gallery-overlay">
+            <h3>Neural Signal Processor</h3>
+            <p>
+              Custom-designed hardware for processing neural signals with
+              microsecond latency.
+            </p>
+            <div class="gallery-tags">
+              <span>Equipment</span>
+              <span>Neural</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Item 6 -->
+        <div class="gallery-item" data-category="experiments">
+          <img
+            src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Drone Swarm Test"
+          />
+          <div class="gallery-overlay">
+            <h3>Drone Swarm Test</h3>
+            <p>
+              Testing autonomous coordination algorithms with our drone swarm
+              platform.
+            </p>
+            <div class="gallery-tags">
+              <span>Experiment</span>
+              <span>Robotics</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Item 7 -->
+        <div class="gallery-item" data-category="results">
+          <img
+            src="https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Neural Network Visualization"
+          />
+          <div class="gallery-overlay">
+            <h3>Neural Network Visualization</h3>
+            <p>
+              3D visualization of our quantum-enhanced neural network during
+              training.
+            </p>
+            <div class="gallery-tags">
+              <span>Results</span>
+              <span>AI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Item 8 -->
+        <div class="gallery-item" data-category="team">
+          <img
+            src="https://images.unsplash.com/photo-1581093804475-577d72e13ff5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="Lab Open House"
+          />
+          <div class="gallery-overlay">
+            <h3>Lab Open House</h3>
+            <p>
+              Annual open house event showcasing our research to the public.
+            </p>
+            <div class="gallery-tags">
+              <span>Team</span>
+              <span>Events</span>
+            </div>
           </div>
         </div>
       </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 LAB_WEB. All rights reserved.</p>
+    </div>
+
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="galleryModal">
+      <div class="gallery-modal-content">
+        <img id="modalImage" src="" alt="" />
+        <button class="gallery-modal-close">&times;</button>
+        <button class="gallery-modal-nav gallery-modal-prev">&lt;</button>
+        <button class="gallery-modal-nav gallery-modal-next">&gt;</button>
+        <div class="gallery-modal-caption" id="modalCaption"></div>
       </div>
     </div>
-  </footer>
 
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h2>Login to <span class="neon-text">LAB</span>_WEB</h2>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="login-email">Email</label>
-          <input type="email" id="login-email" required>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo"><span class="neon-text">ME</span>SL</div>
+
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="feed.html">Feed</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Research Papers</a></li>
+                <li><a href="#">Lab Tools</a></li>
+                <li><a href="#">Equipment</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="#">Email Us</a></li>
+                <li><a href="#">Location</a></li>
+                <li><a href="#">Social Media</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <input type="password" id="login-password" required>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 MESL. All rights reserved.</p>
         </div>
-        <button type="submit" class="btn-primary btn-block">Login</button>
-      </form>
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Login to <span class="neon-text">ME</span>SL</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required />
+          </div>
+          <button type="submit" class="btn-primary btn-block">Login</button>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <!-- Signup Modal -->
-  <div class="modal" id="signupModal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h2>Join <span class="neon-text">LAB</span>_WEB</h2>
-      <form id="signupForm">
-        <div class="form-group">
-          <label for="signup-name">Full Name</label>
-          <input type="text" id="signup-name" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" required>
-        </div>
-        <div class="form-group">
-          <label for="signup-role">Role</label>
-          <select id="signup-role" required>
-            <option value="">Select your role</option>
-            <option value="student">Student</option>
-            <option value="researcher">Researcher</option>
-            <option value="faculty">Faculty</option>
-            <option value="industry">Industry Partner</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Request Access</button>
-        <p class="form-note">All registrations require admin approval</p>
-      </form>
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Join <span class="neon-text">ME</span>SL</h2>
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-role">Role</label>
+            <select id="signup-role" required>
+              <option value="">Select your role</option>
+              <option value="student">Student</option>
+              <option value="researcher">Researcher</option>
+              <option value="faculty">Faculty</option>
+              <option value="industry">Industry Partner</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary btn-block">
+            Request Access
+          </button>
+          <p class="form-note">All registrations require admin approval</p>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <script src="./app.js"></script>
-  <script>
-    // Gallery specific JavaScript
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterButtons = document.querySelectorAll('.filter-btn');
-      const galleryItems = document.querySelectorAll('.gallery-item');
-      const modal = document.getElementById('galleryModal');
-      const modalImage = document.getElementById('modalImage');
-      const modalCaption = document.getElementById('modalCaption');
-      const closeModal = document.querySelector('.gallery-modal-close');
-      const prevBtn = document.querySelector('.gallery-modal-prev');
-      const nextBtn = document.querySelector('.gallery-modal-next');
-      
-      let currentIndex = 0;
-      const galleryItemsArray = Array.from(galleryItems);
-      
-      // Filter functionality
-      filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const filter = this.getAttribute('data-filter');
-          
-          // Update active button
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          
-          // Filter gallery items
-          galleryItems.forEach(item => {
-            if (filter === 'all' || item.getAttribute('data-category') === filter) {
-              item.style.display = 'block';
-            } else {
-              item.style.display = 'none';
-            }
+    <script src="./app.js"></script>
+    <script>
+      // Gallery specific JavaScript
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const galleryItems = document.querySelectorAll(".gallery-item");
+        const modal = document.getElementById("galleryModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalCaption = document.getElementById("modalCaption");
+        const closeModal = document.querySelector(".gallery-modal-close");
+        const prevBtn = document.querySelector(".gallery-modal-prev");
+        const nextBtn = document.querySelector(".gallery-modal-next");
+
+        let currentIndex = 0;
+        const galleryItemsArray = Array.from(galleryItems);
+
+        // Filter functionality
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const filter = this.getAttribute("data-filter");
+
+            // Update active button
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            // Filter gallery items
+            galleryItems.forEach((item) => {
+              if (
+                filter === "all" ||
+                item.getAttribute("data-category") === filter
+              ) {
+                item.style.display = "block";
+              } else {
+                item.style.display = "none";
+              }
+            });
           });
         });
-      });
-      
-      // Modal functionality
-      galleryItems.forEach((item, index) => {
-        item.addEventListener('click', function() {
-          const imgSrc = this.querySelector('img').getAttribute('src');
-          const caption = this.querySelector('h3').textContent;
-          
-          modalImage.setAttribute('src', imgSrc);
+
+        // Modal functionality
+        galleryItems.forEach((item, index) => {
+          item.addEventListener("click", function () {
+            const imgSrc = this.querySelector("img").getAttribute("src");
+            const caption = this.querySelector("h3").textContent;
+
+            modalImage.setAttribute("src", imgSrc);
+            modalCaption.textContent = caption;
+            modal.classList.add("active");
+
+            currentIndex = index;
+          });
+        });
+
+        // Close modal
+        closeModal.addEventListener("click", function () {
+          modal.classList.remove("active");
+        });
+
+        // Navigation
+        prevBtn.addEventListener("click", function () {
+          currentIndex =
+            (currentIndex - 1 + galleryItemsArray.length) %
+            galleryItemsArray.length;
+          updateModalContent();
+        });
+
+        nextBtn.addEventListener("click", function () {
+          currentIndex = (currentIndex + 1) % galleryItemsArray.length;
+          updateModalContent();
+        });
+
+        function updateModalContent() {
+          const item = galleryItemsArray[currentIndex];
+          const imgSrc = item.querySelector("img").getAttribute("src");
+          const caption = item.querySelector("h3").textContent;
+
+          modalImage.setAttribute("src", imgSrc);
           modalCaption.textContent = caption;
-          modal.classList.add('active');
-          
-          currentIndex = index;
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            modal.classList.remove("active");
+          }
         });
       });
-      
-      // Close modal
-      closeModal.addEventListener('click', function() {
-        modal.classList.remove('active');
-      });
-      
-      // Navigation
-      prevBtn.addEventListener('click', function() {
-        currentIndex = (currentIndex - 1 + galleryItemsArray.length) % galleryItemsArray.length;
-        updateModalContent();
-      });
-      
-      nextBtn.addEventListener('click', function() {
-        currentIndex = (currentIndex + 1) % galleryItemsArray.length;
-        updateModalContent();
-      });
-      
-      function updateModalContent() {
-        const item = galleryItemsArray[currentIndex];
-        const imgSrc = item.querySelector('img').getAttribute('src');
-        const caption = item.querySelector('h3').textContent;
-        
-        modalImage.setAttribute('src', imgSrc);
-        modalCaption.textContent = caption;
-      }
-      
-      // Close modal when clicking outside
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          modal.classList.remove('active');
-        }
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
