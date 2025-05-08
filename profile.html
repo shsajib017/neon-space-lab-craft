@@ -1,464 +1,484 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile | Modern Engineering Systems Laboratory</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
-  <style>
-    /* Profile page specific styles */
-    .profile-container {
-      padding-top: calc(var(--navbar-height) + var(--spacing-lg));
-      padding-bottom: var(--spacing-xl);
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      gap: var(--spacing-xl);
-    }
-    
-    .profile-sidebar {
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--border);
-      height: fit-content;
-    }
-    
-    .profile-content {
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--border);
-    }
-    
-    .profile-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: var(--spacing-lg);
-      padding-bottom: var(--spacing-lg);
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .profile-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: var(--spacing-lg);
-      font-size: 3rem;
-      font-weight: 600;
-      color: var(--text);
-      border: 3px solid var(--secondary);
-      box-shadow: var(--glow);
-    }
-    
-    .profile-details h2 {
-      margin-bottom: var(--spacing-xs);
-    }
-    
-    .profile-role {
-      color: var(--secondary);
-      font-size: 1.1rem;
-      margin-bottom: var(--spacing-sm);
-    }
-    
-    .profile-meta {
-      display: flex;
-      gap: var(--spacing-md);
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-    
-    .profile-meta span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .profile-nav {
-      margin-bottom: var(--spacing-lg);
-    }
-    
-    .profile-nav-item {
-      display: flex;
-      align-items: center;
-      padding: var(--spacing-sm) var(--spacing-md);
-      margin-bottom: var(--spacing-xs);
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: var(--text);
-      text-decoration: none;
-    }
-    
-    .profile-nav-item:hover,
-    .profile-nav-item.active {
-      background: rgba(4, 102, 200, 0.2);
-    }
-    
-    .profile-nav-item.active {
-      color: var(--secondary);
-    }
-    
-    .profile-nav-item span:first-child {
-      margin-right: var(--spacing-sm);
-      min-width: 24px;
-    }
-    
-    .profile-section {
-      margin-bottom: var(--spacing-lg);
-    }
-    
-    .profile-section h3 {
-      margin-bottom: var(--spacing-md);
-      padding-bottom: var(--spacing-sm);
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-md);
-    }
-    
-    .profile-projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: var(--spacing-md);
-      margin-top: var(--spacing-md);
-    }
-    
-    .profile-project {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: var(--card-radius);
-      padding: var(--spacing-md);
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    
-    .profile-project:hover {
-      border-color: var(--secondary);
-      box-shadow: var(--glow);
-    }
-    
-    .profile-project h4 {
-      margin-bottom: var(--spacing-xs);
-    }
-    
-    .profile-project-meta {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: var(--spacing-sm);
-    }
-    
-    .profile-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-md);
-    }
-    
-    .badge {
-      background: rgba(4, 102, 200, 0.2);
-      color: var(--text-secondary);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      border: 1px solid var(--border);
-    }
-    
-    .badge.highlighted {
-      background: rgba(0, 245, 255, 0.2);
-      color: var(--secondary);
-      border-color: var(--secondary);
-      box-shadow: var(--glow);
-    }
-    
-    .logout-container {
-      margin-top: var(--spacing-lg);
-      text-align: center;
-    }
-    
-    .btn-logout {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      padding: var(--spacing-xs) var(--spacing-lg);
-      border-radius: var(--border-radius);
-      font-family: var(--font-heading);
-      transition: all 0.3s ease;
-    }
-    
-    .btn-logout:hover {
-      border-color: var(--destructive);
-      color: var(--destructive);
-    }
-    
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile | Modern Engineering Systems Laboratory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* Profile page specific styles */
       .profile-container {
-        grid-template-columns: 1fr;
+        padding-top: calc(var(--navbar-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-xl);
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: var(--spacing-xl);
       }
-      
+
+      .profile-sidebar {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: var(--spacing-lg);
+        border: 1px solid var(--border);
+        height: fit-content;
+      }
+
+      .profile-content {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: var(--spacing-lg);
+        border: 1px solid var(--border);
+      }
+
       .profile-header {
-        flex-direction: column;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid var(--border);
       }
-      
+
       .profile-avatar {
-        margin-right: 0;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: var(--spacing-lg);
+        font-size: 3rem;
+        font-weight: 600;
+        color: var(--text);
+        border: 3px solid var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      .profile-details h2 {
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .profile-role {
+        color: var(--secondary);
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .profile-meta {
+        display: flex;
+        gap: var(--spacing-md);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .profile-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .profile-nav {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .profile-nav-item {
+        display: flex;
+        align-items: center;
+        padding: var(--spacing-sm) var(--spacing-md);
+        margin-bottom: var(--spacing-xs);
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .profile-nav-item:hover,
+      .profile-nav-item.active {
+        background: rgba(4, 102, 200, 0.2);
+      }
+
+      .profile-nav-item.active {
+        color: var(--secondary);
+      }
+
+      .profile-nav-item span:first-child {
+        margin-right: var(--spacing-sm);
+        min-width: 24px;
+      }
+
+      .profile-section {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .profile-section h3 {
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-md);
         margin-bottom: var(--spacing-md);
       }
-      
-      .profile-meta {
-        justify-content: center;
+
+      .profile-projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
       }
-      
-      .form-row {
-        grid-template-columns: 1fr;
+
+      .profile-project {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: var(--card-radius);
+        padding: var(--spacing-md);
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
       }
-    }
-  </style>
-</head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar">
+
+      .profile-project:hover {
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      .profile-project h4 {
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .profile-project-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .profile-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+      }
+
+      .badge {
+        background: rgba(4, 102, 200, 0.2);
+        color: var(--text-secondary);
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid var(--border);
+      }
+
+      .badge.highlighted {
+        background: rgba(0, 245, 255, 0.2);
+        color: var(--secondary);
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      .logout-container {
+        margin-top: var(--spacing-lg);
+        text-align: center;
+      }
+
+      .btn-logout {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        padding: var(--spacing-xs) var(--spacing-lg);
+        border-radius: var(--border-radius);
+        font-family: var(--font-heading);
+        transition: all 0.3s ease;
+      }
+
+      .btn-logout:hover {
+        border-color: var(--destructive);
+        color: var(--destructive);
+      }
+
+      @media (max-width: 768px) {
+        .profile-container {
+          grid-template-columns: 1fr;
+        }
+
+        .profile-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .profile-avatar {
+          margin-right: 0;
+          margin-bottom: var(--spacing-md);
+        }
+
+        .profile-meta {
+          justify-content: center;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="index.html"> <span class="neon-text">ME</span>SL </a>
+        </div>
+
+        <div class="navbar-links">
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="feed.html">Feed</a>
+          <a href="gallery.html">Gallery</a>
+        </div>
+
+        <div class="navbar-auth">
+          <span id="user-welcome" class="neon-text">Welcome, User</span>
+          <button class="btn-logout">Logout</button>
+        </div>
+
+        <div class="navbar-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
     <div class="container">
-      <div class="navbar-logo">
-        <a href="index.html">
-          <span class="neon-text">LAB</span>_WEB
-        </a>
-      </div>
-      
-      <div class="navbar-links">
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="feed.html">Feed</a>
-        <a href="gallery.html">Gallery</a>
-      </div>
-      
-      <div class="navbar-auth">
-        <span id="user-welcome" class="neon-text">Welcome, User</span>
-        <button class="btn-logout">Logout</button>
-      </div>
-      
-      <div class="navbar-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
+      <div class="profile-container">
+        <!-- Profile Sidebar -->
+        <div class="profile-sidebar">
+          <div class="profile-user">
+            <div class="user-avatar" id="sidebar-avatar">JD</div>
+            <h3 class="user-name" id="sidebar-name">John Doe</h3>
+            <p class="user-role" id="sidebar-role">Researcher</p>
+            <div class="user-badges">
+              <span class="badge highlighted">Lab Member</span>
+              <span class="badge">Contributor</span>
+            </div>
+          </div>
 
-  <div class="container">
-    <div class="profile-container">
-      <!-- Profile Sidebar -->
-      <div class="profile-sidebar">
-        <div class="profile-user">
-          <div class="user-avatar" id="sidebar-avatar">JD</div>
-          <h3 class="user-name" id="sidebar-name">John Doe</h3>
-          <p class="user-role" id="sidebar-role">Researcher</p>
-          <div class="user-badges">
-            <span class="badge highlighted">Lab Member</span>
-            <span class="badge">Contributor</span>
+          <div class="profile-nav">
+            <a href="#overview" class="profile-nav-item active">
+              <span>📊</span>
+              <span>Overview</span>
+            </a>
+            <a href="#projects" class="profile-nav-item">
+              <span>🔬</span>
+              <span>Projects</span>
+            </a>
+            <a href="#settings" class="profile-nav-item">
+              <span>⚙️</span>
+              <span>Settings</span>
+            </a>
+          </div>
+
+          <div class="logout-container">
+            <button class="btn-logout">Log Out</button>
           </div>
         </div>
-        
-        <div class="profile-nav">
-          <a href="#overview" class="profile-nav-item active">
-            <span>📊</span>
-            <span>Overview</span>
-          </a>
-          <a href="#projects" class="profile-nav-item">
-            <span>🔬</span>
-            <span>Projects</span>
-          </a>
-          <a href="#settings" class="profile-nav-item">
-            <span>⚙️</span>
-            <span>Settings</span>
-          </a>
-        </div>
-        
-        <div class="logout-container">
-          <button class="btn-logout">Log Out</button>
-        </div>
-      </div>
-      
-      <!-- Profile Content -->
-      <div class="profile-content">
-        <div class="profile-header">
-          <div class="profile-avatar" id="main-avatar">JD</div>
-          <div class="profile-details">
-            <h2 id="main-name">John Doe</h2>
-            <p class="profile-role" id="main-role">Researcher</p>
-            <div class="profile-meta">
-              <span>
-                <span>📅</span>
-                <span>Member since May 2023</span>
-              </span>
-              <span>
-                <span>📁</span>
-                <span>3 Projects</span>
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="profile-section" id="overview">
-          <h3>OVERVIEW</h3>
-          <p>Welcome to your profile dashboard. Here you can manage your projects, update your personal information, and connect with other lab members.</p>
-          
-          <div class="profile-badges">
-            <span class="badge highlighted">Lab Member</span>
-            <span class="badge">Contributor</span>
-            <span class="badge">AI Research</span>
-            <span class="badge">Neural Networks</span>
-            <span class="badge">Quantum Computing</span>
-          </div>
-        </div>
-        
-        <div class="profile-section" id="projects">
-          <h3>MY PROJECTS</h3>
-          
-          <div class="profile-projects">
-            <!-- Project 1 -->
-            <div class="profile-project">
-              <h4>Quantum Neural Interface</h4>
-              <div class="profile-project-meta">
-                <div>Status: Active</div>
-                <div>Last updated: 2 days ago</div>
-              </div>
-              <div class="project-tech">
-                <span>Quantum</span>
-                <span>Neural</span>
-              </div>
-            </div>
-            
-            <!-- Project 2 -->
-            <div class="profile-project">
-              <h4>Swarm Intelligence Model</h4>
-              <div class="profile-project-meta">
-                <div>Status: Active</div>
-                <div>Last updated: 1 week ago</div>
-              </div>
-              <div class="project-tech">
-                <span>AI</span>
-                <span>Swarm</span>
-              </div>
-            </div>
-            
-            <!-- Project 3 -->
-            <div class="profile-project">
-              <h4>Advanced Material Simulation</h4>
-              <div class="profile-project-meta">
-                <div>Status: Complete</div>
-                <div>Last updated: 1 month ago</div>
-              </div>
-              <div class="project-tech">
-                <span>Materials</span>
-                <span>Simulation</span>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+          <div class="profile-header">
+            <div class="profile-avatar" id="main-avatar">JD</div>
+            <div class="profile-details">
+              <h2 id="main-name">John Doe</h2>
+              <p class="profile-role" id="main-role">Researcher</p>
+              <div class="profile-meta">
+                <span>
+                  <span>📅</span>
+                  <span>Member since May 2023</span>
+                </span>
+                <span>
+                  <span>📁</span>
+                  <span>3 Projects</span>
+                </span>
               </div>
             </div>
           </div>
-        </div>
-        
-        <div class="profile-section" id="settings">
-          <h3>PROFILE SETTINGS</h3>
-          
-          <form id="profile-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="profile-name">Full Name</label>
-                <input type="text" id="profile-name" class="form-control" value="John Doe">
+
+          <div class="profile-section" id="overview">
+            <h3>OVERVIEW</h3>
+            <p>
+              Welcome to your profile dashboard. Here you can manage your
+              projects, update your personal information, and connect with other
+              lab members.
+            </p>
+
+            <div class="profile-badges">
+              <span class="badge highlighted">Lab Member</span>
+              <span class="badge">Contributor</span>
+              <span class="badge">AI Research</span>
+              <span class="badge">Neural Networks</span>
+              <span class="badge">Quantum Computing</span>
+            </div>
+          </div>
+
+          <div class="profile-section" id="projects">
+            <h3>MY PROJECTS</h3>
+
+            <div class="profile-projects">
+              <!-- Project 1 -->
+              <div class="profile-project">
+                <h4>Quantum Neural Interface</h4>
+                <div class="profile-project-meta">
+                  <div>Status: Active</div>
+                  <div>Last updated: 2 days ago</div>
+                </div>
+                <div class="project-tech">
+                  <span>Quantum</span>
+                  <span>Neural</span>
+                </div>
               </div>
-              
-              <div class="form-group">
-                <label for="profile-email">Email</label>
-                <input type="email" id="profile-email" class="form-control" value="john@example.com" readonly>
+
+              <!-- Project 2 -->
+              <div class="profile-project">
+                <h4>Swarm Intelligence Model</h4>
+                <div class="profile-project-meta">
+                  <div>Status: Active</div>
+                  <div>Last updated: 1 week ago</div>
+                </div>
+                <div class="project-tech">
+                  <span>AI</span>
+                  <span>Swarm</span>
+                </div>
+              </div>
+
+              <!-- Project 3 -->
+              <div class="profile-project">
+                <h4>Advanced Material Simulation</h4>
+                <div class="profile-project-meta">
+                  <div>Status: Complete</div>
+                  <div>Last updated: 1 month ago</div>
+                </div>
+                <div class="project-tech">
+                  <span>Materials</span>
+                  <span>Simulation</span>
+                </div>
               </div>
             </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="profile-role">Role</label>
-                <select id="profile-role" class="form-control">
-                  <option value="student">Student</option>
-                  <option value="researcher" selected>Researcher</option>
-                  <option value="faculty">Faculty</option>
-                  <option value="industry">Industry Partner</option>
-                </select>
+          </div>
+
+          <div class="profile-section" id="settings">
+            <h3>PROFILE SETTINGS</h3>
+
+            <form id="profile-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-name">Full Name</label>
+                  <input
+                    type="text"
+                    id="profile-name"
+                    class="form-control"
+                    value="John Doe"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-email">Email</label>
+                  <input
+                    type="email"
+                    id="profile-email"
+                    class="form-control"
+                    value="john@example.com"
+                    readonly
+                  />
+                </div>
               </div>
-              
-              <div class="form-group">
-                <label for="profile-specialization">Specialization</label>
-                <input type="text" id="profile-specialization" class="form-control" value="Quantum Computing">
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-role">Role</label>
+                  <select id="profile-role" class="form-control">
+                    <option value="student">Student</option>
+                    <option value="researcher" selected>Researcher</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="industry">Industry Partner</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-specialization">Specialization</label>
+                  <input
+                    type="text"
+                    id="profile-specialization"
+                    class="form-control"
+                    value="Quantum Computing"
+                  />
+                </div>
               </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="profile-bio">Bio</label>
-              <textarea id="profile-bio" class="form-control" rows="4">Researcher specialized in quantum computing applications for machine learning and artificial intelligence.</textarea>
-            </div>
-            
-            <button type="submit" class="btn-primary">Save Changes</button>
-          </form>
+
+              <div class="form-group">
+                <label for="profile-bio">Bio</label>
+                <textarea id="profile-bio" class="form-control" rows="4">
+Researcher specialized in quantum computing applications for machine learning and artificial intelligence.</textarea
+                >
+              </div>
+
+              <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <span class="neon-text">LAB</span>_WEB
-        </div>
-        
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>Navigation</h4>
-            <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="projects.html">Projects</a></li>
-              <li><a href="feed.html">Feed</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-col">
-            <h4>Resources</h4>
-            <ul>
-              <li><a href="#">Documentation</a></li>
-              <li><a href="#">Research Papers</a></li>
-              <li><a href="#">Lab Tools</a></li>
-              <li><a href="#">Equipment</a></li>
-            </ul>
-          </div>
-          
-          <div class="footer-col">
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="#">Email Us</a></li>
-              <li><a href="#">Location</a></li>
-              <li><a href="#">Social Media</a></li>
-              <li><a href="#">Support</a></li>
-            </ul>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo"><span class="neon-text">ME</span>SL</div>
+
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="feed.html">Feed</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Research Papers</a></li>
+                <li><a href="#">Lab Tools</a></li>
+                <li><a href="#">Equipment</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="#">Email Us</a></li>
+                <li><a href="#">Location</a></li>
+                <li><a href="#">Social Media</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 LAB_WEB. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
 
-  <script src="./app.js"></script>
-</body>
+        <div class="footer-bottom">
+          <p>&copy; 2025 MESL. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
 </html>
