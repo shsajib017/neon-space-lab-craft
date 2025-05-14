@@ -29,6 +29,7 @@
           <a href="projects.html">Projects</a>
           <a href="feed.html">Feed</a>
           <a href="gallery.html">Gallery</a>
+          <a href="team.html">Team</a>
         </div>
 
         <div class="navbar-auth">
@@ -316,6 +317,10 @@
             <input type="text" id="signup-name" required />
           </div>
           <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" required />
+          </div>
+          <div class="form-group">
             <label for="signup-email">Email</label>
             <input type="email" id="signup-email" required />
           </div>
@@ -324,18 +329,10 @@
             <input type="password" id="signup-password" required />
           </div>
           <div class="form-group">
-            <label for="signup-role">Role</label>
-            <select id="signup-role" required>
-              <option value="">Select your role</option>
-              <option value="student">Student</option>
-              <option value="researcher">Researcher</option>
-              <option value="faculty">Faculty</option>
-              <option value="industry">Industry Partner</option>
-            </select>
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input type="password" id="signup-password" required />
           </div>
-          <button type="submit" class="btn-primary btn-block">
-            Request Access
-          </button>
+          <button type="submit" class="btn-primary btn-block">Sign up</button>
           <p class="form-note">All registrations require admin approval</p>
         </form>
       </div>
@@ -344,4 +341,7 @@
     <script type="module" src="/src/main.tsx"></script>
     <script src="./app.js"></script>
   </body>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+    <span class="theme-toggle-icon">🌙</span>
+  </button>
 </html>
