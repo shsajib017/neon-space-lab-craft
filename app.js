@@ -1,82 +1,98 @@
-
 // DOM Elements
-const navbar = document.querySelector('.navbar');
-const navbarToggle = document.querySelector('.navbar-toggle');
-const loginBtn = document.querySelector('.btn-login');
-const signupBtn = document.querySelector('.btn-signup');
-const loginModal = document.getElementById('loginModal');
-const signupModal = document.getElementById('signupModal');
-const closeModals = document.querySelectorAll('.close-modal');
-const loginForm = document.getElementById('loginForm');
-const signupForm = document.getElementById('signupForm');
-const exploreBtn = document.querySelector('.hero-buttons .btn-primary');
-const joinBtn = document.querySelector('.hero-buttons .btn-secondary');
+const navbar = document.querySelector(".navbar");
+const navbarToggle = document.querySelector(".navbar-toggle");
+const loginBtn = document.querySelector(".btn-login");
+const signupBtn = document.querySelector(".btn-signup");
+const loginModal = document.getElementById("loginModal");
+const signupModal = document.getElementById("signupModal");
+const closeModals = document.querySelectorAll(".close-modal");
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const exploreBtn = document.querySelector(".hero-buttons .btn-primary");
+const joinBtn = document.querySelector(".hero-buttons .btn-secondary");
 
 // Data Structure Setup
 const initializeLocalStorage = () => {
   // Only initialize if the collections don't exist
-  if (!localStorage.getItem('users')) {
-    localStorage.setItem('users', JSON.stringify([
-      { id: 1, name: 'John Doe', email: 'john@example.com', password: 'password123', role: 'researcher', approved: true },
-      { id: 2, name: 'Alice Smith', email: 'alice@example.com', password: 'password123', role: 'faculty', approved: true }
-    ]));
+  if (!localStorage.getItem("users")) {
+    localStorage.setItem(
+      "users",
+      JSON.stringify([
+        {
+          id: 1,
+          name: "John Doe",
+          email: "john@example.com",
+          password: "password123",
+          role: "researcher",
+          approved: true,
+        },
+        {
+          id: 2,
+          name: "Alice Smith",
+          email: "alice@example.com",
+          password: "password123",
+          role: "faculty",
+          approved: true,
+        },
+      ])
+    );
   }
-  if (!localStorage.getItem('currentUser')) {
-    localStorage.setItem('currentUser', JSON.stringify(null));
+  if (!localStorage.getItem("currentUser")) {
+    localStorage.setItem("currentUser", JSON.stringify(null));
   }
-  if (!localStorage.getItem('posts')) {
-    localStorage.setItem('posts', JSON.stringify([]));
+  if (!localStorage.getItem("posts")) {
+    localStorage.setItem("posts", JSON.stringify([]));
   }
-  if (!localStorage.getItem('projects')) {
-    localStorage.setItem('projects', JSON.stringify([]));
+  if (!localStorage.getItem("projects")) {
+    localStorage.setItem("projects", JSON.stringify([]));
   }
-  if (!localStorage.getItem('events')) {
-    localStorage.setItem('events', JSON.stringify([]));
+  if (!localStorage.getItem("events")) {
+    localStorage.setItem("events", JSON.stringify([]));
   }
 };
 
 // Navigation Toggle
 if (navbarToggle) {
-  navbarToggle.addEventListener('click', () => {
-    navbar.classList.toggle('active');
+  navbarToggle.addEventListener("click", () => {
+    navbar.classList.toggle("active");
   });
 }
 
 // Modal Handling
 const openModal = (modal) => {
   if (modal) {
-    modal.classList.add('active');
+    modal.classList.add("active");
   }
 };
 
 const closeModal = (modal) => {
   if (modal) {
-    modal.classList.remove('active');
+    modal.classList.remove("active");
   }
 };
 
 // Event Listeners for Modals
 if (loginBtn) {
-  loginBtn.addEventListener('click', () => openModal(loginModal));
+  loginBtn.addEventListener("click", () => openModal(loginModal));
 }
 
 if (signupBtn) {
-  signupBtn.addEventListener('click', () => openModal(signupModal));
+  signupBtn.addEventListener("click", () => openModal(signupModal));
 }
 
 if (joinBtn) {
-  joinBtn?.addEventListener('click', () => openModal(signupModal));
+  joinBtn?.addEventListener("click", () => openModal(signupModal));
 }
 
-closeModals.forEach(button => {
-  button.addEventListener('click', () => {
+closeModals.forEach((button) => {
+  button.addEventListener("click", () => {
     closeModal(loginModal);
     closeModal(signupModal);
   });
 });
 
 // Close modals when clicking outside
-window.addEventListener('click', (event) => {
+window.addEventListener("click", (event) => {
   if (event.target === loginModal) {
     closeModal(loginModal);
   }
@@ -87,49 +103,54 @@ window.addEventListener('click', (event) => {
 
 // Form Handling
 if (loginForm) {
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    
+
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+
     // Basic form validation
     if (!email || !password) {
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
-    
+
     // Check credentials against stored users
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => u.email === email && u.password === password && u.approved);
-    
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(
+      (u) => u.email === email && u.password === password && u.approved
+    );
+
     if (user) {
       // Store current user
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
       // Update UI based on login state
       updateUIForLoggedInUser(user);
-      
+
       closeModal(loginModal);
       alert(`Welcome back, ${user.name}!`);
-      
+
       // Redirect to profile if on index page
-      if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+      if (
+        window.location.pathname.includes("index.html") ||
+        window.location.pathname === "/"
+      ) {
         // Create a profile.html page dynamically if it doesn't exist
         createDynamicProfilePage(user);
         setTimeout(() => {
-          window.location.href = 'profile.html';
+          window.location.href = "profile.html";
         }, 1000);
       }
     } else {
-      alert('Invalid email or password, or your account is pending approval.');
+      alert("Invalid email or password, or your account is pending approval.");
     }
   });
 }
 
 function createDynamicProfilePage(user) {
   // Check if profile page already exists in local storage
-  if (!localStorage.getItem('profilePage')) {
+  if (!localStorage.getItem("profilePage")) {
     const profileHTML = `
       <!DOCTYPE html>
       <html lang="en">
@@ -708,38 +729,38 @@ function createDynamicProfilePage(user) {
       </body>
       </html>
     `;
-    
+
     // Save to local storage
-    localStorage.setItem('profilePage', profileHTML);
-    
+    localStorage.setItem("profilePage", profileHTML);
+
     // Create the file in the file system (normally would be done by writing to the file)
     // Since we can't directly create files in the browser, this is just a simulation
-    console.log('Profile page created dynamically');
+    console.log("Profile page created dynamically");
   }
 }
 
 if (signupForm) {
-  signupForm.addEventListener('submit', (e) => {
+  signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    
-    const name = document.getElementById('signup-name').value;
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const role = document.getElementById('signup-role').value;
-    
+
+    const name = document.getElementById("signup-name").value;
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("signup-password").value;
+    const role = document.getElementById("signup-role").value;
+
     // Basic form validation
     if (!name || !email || !password || !role) {
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
-    
+
     // Check if email already exists
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    if (users.some(u => u.email === email)) {
-      alert('This email is already registered');
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    if (users.some((u) => u.email === email)) {
+      alert("This email is already registered");
       return;
     }
-    
+
     // Add new user
     const newUser = {
       id: users.length + 1,
@@ -747,48 +768,48 @@ if (signupForm) {
       email,
       password,
       role,
-      approved: false // Requires admin approval
+      approved: false, // Requires admin approval
     };
-    
+
     users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    
+    localStorage.setItem("users", JSON.stringify(users));
+
     closeModal(signupModal);
-    alert('Registration request sent! Admin approval pending.');
+    alert("Registration request sent! Admin approval pending.");
   });
 }
 
 // Navigation
 if (exploreBtn) {
-  exploreBtn.addEventListener('click', () => {
-    window.location.href = 'projects.html';
+  exploreBtn.addEventListener("click", () => {
+    window.location.href = "projects.html";
   });
 }
 
 // Check login state and update UI
 function updateUIForLoggedInUser(user) {
-  const loginBtn = document.querySelector('.btn-login');
-  const signupBtn = document.querySelector('.btn-signup');
-  const navbarAuth = document.querySelector('.navbar-auth');
-  
+  const loginBtn = document.querySelector(".btn-login");
+  const signupBtn = document.querySelector(".btn-signup");
+  const navbarAuth = document.querySelector(".navbar-auth");
+
   if (user && navbarAuth) {
     // Hide login/signup buttons
-    if (loginBtn) loginBtn.style.display = 'none';
-    if (signupBtn) signupBtn.style.display = 'none';
-    
+    if (loginBtn) loginBtn.style.display = "none";
+    if (signupBtn) signupBtn.style.display = "none";
+
     // Add welcome message and logout button
-    if (!document.getElementById('user-welcome')) {
-      const welcomeSpan = document.createElement('span');
-      welcomeSpan.id = 'user-welcome';
-      welcomeSpan.className = 'neon-text';
+    if (!document.getElementById("user-welcome")) {
+      const welcomeSpan = document.createElement("span");
+      welcomeSpan.id = "user-welcome";
+      welcomeSpan.className = "neon-text";
       welcomeSpan.textContent = `Welcome, ${user.name}`;
       navbarAuth.appendChild(welcomeSpan);
-      
-      const logoutButton = document.createElement('button');
-      logoutButton.className = 'btn-logout';
-      logoutButton.textContent = 'Logout';
-      logoutButton.addEventListener('click', () => {
-        localStorage.setItem('currentUser', JSON.stringify(null));
+
+      const logoutButton = document.createElement("button");
+      logoutButton.className = "btn-logout";
+      logoutButton.textContent = "Logout";
+      logoutButton.addEventListener("click", () => {
+        localStorage.setItem("currentUser", JSON.stringify(null));
         window.location.reload();
       });
       navbarAuth.appendChild(logoutButton);
@@ -797,13 +818,13 @@ function updateUIForLoggedInUser(user) {
 }
 
 // Project cards hover effect enhancement
-const projectCards = document.querySelectorAll('.project-card');
-projectCards.forEach(card => {
-  card.addEventListener('mousemove', (e) => {
+const projectCards = document.querySelectorAll(".project-card");
+projectCards.forEach((card) => {
+  card.addEventListener("mousemove", (e) => {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     card.style.background = `
       radial-gradient(
         circle at ${x}px ${y}px, 
@@ -812,27 +833,313 @@ projectCards.forEach(card => {
       )
     `;
   });
-  
-  card.addEventListener('mouseleave', () => {
-    card.style.background = 'var(--card-bg)';
+
+  card.addEventListener("mouseleave", () => {
+    card.style.background = "var(--card-bg)";
   });
 });
 
-// Check for logged in user on page load
-document.addEventListener('DOMContentLoaded', () => {
+// Apply theme immediately when page loads (before DOM is fully loaded)
+(function () {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.documentElement.classList.add("dark-theme");
+  } else {
+    document.documentElement.classList.remove("dark-theme");
+  }
+})();
+
+// Theme Toggle Functionality - updated to handle select elements
+function initThemeToggle() {
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeToggleIcon = document.querySelector(".theme-toggle-icon");
+  const rootElement = document.documentElement;
+
+  // Check if user has previously selected a theme
+  const savedTheme = localStorage.getItem("theme");
+
+  // Apply saved theme or default to light theme
+  if (savedTheme === "dark") {
+    rootElement.classList.add("dark-theme");
+    if (themeToggleIcon) themeToggleIcon.textContent = "☀️";
+  } else {
+    rootElement.classList.remove("dark-theme");
+    if (themeToggleIcon) themeToggleIcon.textContent = "🌙";
+  }
+
+  // Toggle theme when button is clicked
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      rootElement.classList.toggle("dark-theme");
+
+      // Update localStorage
+      if (rootElement.classList.contains("dark-theme")) {
+        localStorage.setItem("theme", "dark");
+        if (themeToggleIcon) themeToggleIcon.textContent = "☀️";
+      } else {
+        localStorage.setItem("theme", "light");
+        if (themeToggleIcon) themeToggleIcon.textContent = "🌙";
+      }
+
+      // Force update select elements' appearance
+      updateSelectElementsForTheme();
+    });
+  }
+}
+
+// Function to update select elements when theme changes
+function updateSelectElementsForTheme() {
+  // This forces a repaint of select elements to ensure they pick up the new theme
+  const selectElements = document.querySelectorAll("select");
+  selectElements.forEach((select) => {
+    // Toggle a class to force a repaint
+    select.classList.add("theme-updating");
+    setTimeout(() => {
+      select.classList.remove("theme-updating");
+    }, 10);
+  });
+}
+
+// Create interactive background with cursor-following effect only
+function createInteractiveBackground() {
+  const body = document.body;
+  const backgroundContainer = document.createElement("div");
+  backgroundContainer.className = "interactive-background";
+
+  // Create grid cells
+  for (let i = 0; i < 400; i++) {
+    const cell = document.createElement("div");
+    cell.className = "bg-cell";
+    backgroundContainer.appendChild(cell);
+  }
+
+  // Insert at the beginning of body
+  body.insertBefore(backgroundContainer, body.firstChild);
+
+  // Add cursor-following effect that works across all elements
+  document.addEventListener("mousemove", (e) => {
+    // Get mouse position relative to the document
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    // Get background container dimensions
+    const rect = backgroundContainer.getBoundingClientRect();
+
+    // Calculate which cell the mouse is over
+    const cellWidth = rect.width / 20;
+    const cellHeight = rect.height / 20;
+    const centerCellCol = Math.floor((mouseX - rect.left) / cellWidth);
+    const centerCellRow = Math.floor((mouseY - rect.top) / cellHeight);
+
+    // Only proceed if mouse is within the container bounds
+    if (
+      centerCellCol >= 0 &&
+      centerCellCol < 20 &&
+      centerCellRow >= 0 &&
+      centerCellRow < 20
+    ) {
+      // Update all cells based on distance from mouse
+      for (let row = 0; row < 20; row++) {
+        for (let col = 0; col < 20; col++) {
+          const index = row * 20 + col;
+          const cell = backgroundContainer.children[index];
+
+          // Calculate distance from mouse (in cell units)
+          const distance = Math.sqrt(
+            Math.pow(row - centerCellRow, 2) + Math.pow(col - centerCellCol, 2)
+          );
+
+          // Apply gradient based on distance
+          if (distance < 5) {
+            // Only affect cells within 5 cell radius
+            const intensity = Math.max(0, 1 - distance / 5);
+            const color = document.documentElement.classList.contains(
+              "dark-theme"
+            )
+              ? `rgba(0, 245, 255, ${intensity * 0.2})`
+              : `rgba(0, 120, 212, ${intensity * 0.2})`;
+
+            cell.style.backgroundColor = color;
+            cell.style.transition = "background-color 0.2s ease"; // Fast, smooth transition
+          } else {
+            cell.style.backgroundColor = "";
+          }
+        }
+      }
+    }
+  });
+
+  // Reset all cells when mouse leaves the document
+  document.addEventListener("mouseleave", () => {
+    for (let i = 0; i < 400; i++) {
+      backgroundContainer.children[i].style.backgroundColor = "";
+    }
+  });
+}
+
+// Create a wave effect across the grid
+function createWaveEffect(container) {
+  // Pick a random starting point
+  const startRow = Math.floor(Math.random() * 20);
+  const startCol = Math.floor(Math.random() * 20);
+
+  // Create expanding wave
+  for (let distance = 1; distance <= 10; distance++) {
+    setTimeout(() => {
+      for (
+        let r = Math.max(0, startRow - distance);
+        r <= Math.min(19, startRow + distance);
+        r++
+      ) {
+        for (
+          let c = Math.max(0, startCol - distance);
+          c <= Math.min(19, startCol + distance);
+          c++
+        ) {
+          // Only animate cells at the current "wave distance"
+          const cellDistance = Math.round(
+            Math.sqrt(Math.pow(r - startRow, 2) + Math.pow(c - startCol, 2))
+          );
+          if (cellDistance === distance) {
+            const index = r * 20 + c;
+            const cell = container.children[index];
+
+            // Subtle animation
+            const opacity = 0.2 - distance * 0.02;
+            cell.style.backgroundColor =
+              document.documentElement.classList.contains("dark-theme")
+                ? `rgba(0, 245, 255, ${opacity})`
+                : `rgba(0, 120, 212, ${opacity})`;
+
+            setTimeout(() => {
+              cell.style.backgroundColor = "";
+            }, 500);
+          }
+        }
+      }
+    }, distance * 100);
+  }
+}
+
+// Animate a single cell - more visible hover effect
+function animateCell(cell) {
+  // Add pulse animation - increased opacity
+  cell.style.backgroundColor = document.documentElement.classList.contains(
+    "dark-theme"
+  )
+    ? "rgba(0, 245, 255, 0.15)" // Increased from 0.05 to 0.15
+    : "rgba(0, 120, 212, 0.15)"; // Increased from 0.05 to 0.15
+
+  // Create ripple effect to adjacent cells
+  const index = Array.from(cell.parentNode.children).indexOf(cell);
+  const row = Math.floor(index / 20);
+  const col = index % 20;
+
+  // Animate adjacent cells with delay - stronger effect
+  for (let r = Math.max(0, row - 2); r <= Math.min(19, row + 2); r++) {
+    for (let c = Math.max(0, col - 2); c <= Math.min(19, col + 2); c++) {
+      if (r !== row || c !== col) {
+        const adjacentIndex = r * 20 + c;
+        const adjacentCell = cell.parentNode.children[adjacentIndex];
+        const distance = Math.sqrt(Math.pow(r - row, 2) + Math.pow(c - col, 2));
+        const delay = distance * 100;
+
+        setTimeout(() => {
+          adjacentCell.style.backgroundColor =
+            document.documentElement.classList.contains("dark-theme")
+              ? `rgba(0, 245, 255, ${0.1 - distance * 0.03})` // Increased from 0.03 to 0.1
+              : `rgba(0, 120, 212, ${0.1 - distance * 0.03})`; // Increased from 0.03 to 0.1
+
+          setTimeout(() => {
+            adjacentCell.style.backgroundColor = "";
+          }, 500);
+        }, delay);
+      }
+    }
+  }
+
+  // Reset the original cell after animation - longer duration
+  setTimeout(() => {
+    cell.style.backgroundColor = "";
+  }, 800); // Increased from 500ms to 800ms
+}
+
+// Create floating particles - more frequent
+function createParticles() {
+  const backgroundContainer = document.querySelector(".interactive-background");
+
+  // Increase number of initial particles from 15 to 30
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+
+      // Random size - slightly larger (2-8px instead of 2-6px)
+      const size = Math.random() * 6 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // Faster animation duration (8-18s instead of 10-30s)
+      const duration = Math.random() * 10 + 8;
+      particle.style.animationDuration = `${duration}s`;
+
+      // Shorter random delay
+      particle.style.animationDelay = `${Math.random() * 3}s`;
+
+      backgroundContainer.appendChild(particle);
+
+      // Remove and recreate particle after animation completes
+      setTimeout(() => {
+        particle.remove();
+        createSingleParticle();
+      }, duration * 1000);
+    }, i * 100); // Reduced delay between particle creation
+  }
+}
+
+// Create a single particle - enhanced
+function createSingleParticle() {
+  const backgroundContainer = document.querySelector(".interactive-background");
+
+  const particle = document.createElement("div");
+  particle.className = "particle";
+
+  // Random position (always start from bottom)
+  particle.style.left = `${Math.random() * 100}%`;
+  particle.style.top = "100%";
+
+  // Random size - slightly larger
+  const size = Math.random() * 6 + 2;
+  particle.style.width = `${size}px`;
+  particle.style.height = `${size}px`;
+
+  // Faster animation
+  const duration = Math.random() * 10 + 8;
+  particle.style.animationDuration = `${duration}s`;
+
+  backgroundContainer.appendChild(particle);
+
+  // Remove and recreate particle after animation completes
+  setTimeout(() => {
+    particle.remove();
+    createSingleParticle();
+  }, duration * 1000);
+}
+
+// Initialize the interactive background when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  createInteractiveBackground();
+  createParticles();
   initializeLocalStorage();
-  
+  initThemeToggle();
+
   // Check if user is logged in
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (currentUser) {
     updateUIForLoggedInUser(currentUser);
-  }
-});
-
-// Create the profile.html file on first run
-document.addEventListener('DOMContentLoaded', () => {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser) {
-    createDynamicProfilePage(currentUser);
   }
 });
