@@ -1,10 +1,47 @@
-
 :root {
-  /* Color Variables */
+  /* Bright/Light Professional Tech Color Variables */
+  --primary: #fff;
+  --secondary: #0078d4;
+  --accent: #0466c8;
+
+  --background: #e6e6e6;
+  --text: #3a3b3b;
+  --text-secondary: #262729;
+
+  --border: #e9ecef;
+  --card-bg: rgba(255, 255, 255, 0.95);
+
+  --overlay: rgba(255, 255, 255, 0.5); /* More transparent for blur effect */
+
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  --glow: 0 0 8px var(--secondary);
+  --glow-strong: 0 0 15px var(--secondary), 0 0 30px rgba(0, 120, 212, 0.3);
+
+  /* Typography */
+  --font-heading: "Orbitron", sans-serif;
+  --font-body: "Rajdhani", sans-serif;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Layout */
+  --navbar-height: 70px;
+  --container-width: 1200px;
+  --border-radius: 4px;
+  --card-radius: 8px;
+}
+
+/* Dark theme class to be toggled */
+:root.dark-theme {
   --primary: #001233;
-  --secondary: #00F5FF;
-  --accent: #0466C8;
-  --background: #1A1A2E;
+  --secondary: #00f5ff;
+  --accent: #0466c8;
+  --background: #1a1a2e;
   --text: #ffffff;
   --text-secondary: #a0a0b8;
   --border: #2a2a4e;
@@ -13,33 +50,61 @@
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --glow: 0 0 8px var(--secondary);
   --glow-strong: 0 0 15px var(--secondary), 0 0 30px rgba(0, 245, 255, 0.4);
-  
-  /* Typography */
-  --font-heading: 'Orbitron', sans-serif;
-  --font-body: 'Rajdhani', sans-serif;
-  
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  
-  /* Layout */
-  --navbar-height: 70px;
-  --container-width: 1200px;
-  --border-radius: 4px;
-  --card-radius: 8px;
+}
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 999;
+  box-shadow: var(--shadow);
 }
 
+.theme-toggle:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+  box-shadow: var(--glow);
+  transform: scale(1.05);
+}
+
+.theme-toggle-icon {
+  font-size: 1.5rem;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Define both themes */
+
 /* Reset & Base Styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -49,14 +114,130 @@ body {
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at top right, rgba(6, 6, 45, 0.5), transparent 70%),
-    radial-gradient(circle at bottom left, rgba(4, 102, 200, 0.2), transparent 70%),
-    linear-gradient(to bottom, var(--background), var(--primary));
-  background-attachment: fixed;
+  position: relative;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/* Interactive background grid */
+.interactive-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  pointer-events: none;
+}
+
+/* Background cells with improved hover effect */
+.bg-cell {
+  position: relative;
+  border: 1px solid rgba(0, 120, 212, 0.05);
+  transition: all 0.3s ease; /* Faster transition */
+  pointer-events: none;
+}
+
+/* Dark theme cells */
+:root.dark-theme .bg-cell {
+  border-color: rgba(0, 245, 255, 0.05);
+}
+
+/* Remove the previous ::before hover effect */
+.bg-cell::before {
+  display: none;
+}
+
+/* Hover effect */
+.bg-cell:hover {
+  background-color: rgba(0, 120, 212, 0.1); /* Bluish color */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+/* Additional background effects */
+.interactive-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(0, 120, 212, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      rgba(0, 120, 212, 0.1) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+:root.dark-theme .interactive-background::before {
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(0, 245, 255, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      rgba(4, 102, 200, 0.15) 0%,
+      transparent 50%
+    );
+}
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(0, 120, 212, 0.4);
+  pointer-events: none;
+  animation: float 15s infinite linear;
+  box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
+}
+
+:root.dark-theme .particle {
+  background: rgba(0, 245, 255, 0.4);
+  box-shadow: 0 0 5px rgba(0, 245, 255, 0.3);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-25vh) translateX(25px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(-50vh) translateX(-25px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-75vh) translateX(25px) rotate(270deg);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   letter-spacing: 1px;
@@ -118,14 +299,14 @@ button {
 }
 
 .glitch {
-  position: relative;
+  /* position: relative; */
   font-size: 3rem;
-  text-transform: uppercase;
+  /* text-transform: uppercase;
   color: var(--text);
-  animation: glitch 2s infinite;
+  animation: glitch 2s infinite; */
 }
 
-.glitch::before,
+/* .glitch::before,
 .glitch::after {
   content: attr(data-text);
   position: absolute;
@@ -168,9 +349,10 @@ button {
   100% {
     clip: rect(56px, 450px, 134px, 0);
   }
-}
+} */
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
   padding: 0.8rem 2rem;
   border-radius: var(--border-radius);
   font-size: 1rem;
@@ -236,7 +418,8 @@ button {
   box-shadow: var(--glow);
 }
 
-.btn-login, .btn-signup {
+.btn-login,
+.btn-signup {
   background: transparent;
   color: var(--text);
   padding: 0.5rem 1.2rem;
@@ -256,7 +439,7 @@ button {
 
 .btn-signup {
   background: var(--accent);
-  color: var(--text);
+  color: white;
 }
 
 .btn-signup:hover {
@@ -270,10 +453,40 @@ button {
   left: 0;
   width: 100%;
   height: var(--navbar-height);
-  background: rgba(0, 18, 51, 0.9);
+  background: rgba(255, 255, 255, 0.9); /* Light mode navbar */
   backdrop-filter: blur(10px);
   z-index: 1000;
   border-bottom: 1px solid var(--border);
+}
+
+/* Body styles */
+body {
+  font-family: var(--font-body);
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  /* Background image removed in light mode by default */
+}
+
+/* Dark theme overrides */
+:root.dark-theme .navbar {
+  background: rgba(0, 18, 51, 0.8); /* Dark mode navbar */
+}
+
+:root.dark-theme body {
+  background-image: radial-gradient(
+      circle at top right,
+      rgba(6, 6, 45, 0.5),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(4, 102, 200, 0.2),
+      transparent 70%
+    ),
+    linear-gradient(to bottom, var(--background), var(--primary));
+  background-attachment: fixed;
 }
 
 .navbar .container {
@@ -305,7 +518,7 @@ button {
 }
 
 .navbar-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -395,7 +608,7 @@ button {
 }
 
 .project-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -481,7 +694,15 @@ button {
   padding: var(--spacing-md);
   border: 1px solid var(--border);
   display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+.event-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .event-card:hover {
@@ -535,7 +756,9 @@ button {
 .event-cta {
   display: flex;
   align-items: center;
+  /* justify-content: end; */
   margin-left: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 /* Footer */
@@ -649,20 +872,67 @@ footer {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+textarea,
+.post-form textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
   width: 100%;
   padding: 0.8rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--primary); /* White in light mode */
   border: 1px solid var(--border);
   border-radius: var(--border-radius);
   color: var(--text);
   font-family: var(--font-body);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Dark theme overrides for inputs */
+:root.dark-theme .form-group input,
+:root.dark-theme .form-group select,
+:root.dark-theme textarea,
+:root.dark-theme .post-form textarea,
+:root.dark-theme input[type="text"],
+:root.dark-theme input[type="email"],
+:root.dark-theme input[type="password"],
+:root.dark-theme select {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+}
+
+/* Focus states */
 .form-group input:focus,
-.form-group select:focus {
-  border-color: var(--accent);
+.form-group select:focus,
+textarea:focus,
+.post-form textarea:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: var(--secondary);
   outline: none;
+  box-shadow: var(--glow);
+}
+
+/* Placeholder text */
+::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Icons and symbols within inputs */
+.form-group svg,
+.input-icon,
+.form-icon {
+  color: var(--text);
+}
+
+:root.dark-theme .form-group svg,
+:root.dark-theme .input-icon,
+:root.dark-theme .form-icon {
+  color: var(--text-secondary);
 }
 
 .form-note {
@@ -670,6 +940,59 @@ footer {
   margin-top: var(--spacing-md);
   font-size: 0.9rem;
   color: var(--text-secondary);
+}
+
+/* Form elements - updated for theme consistency */
+select,
+.form-group select,
+.filter-group select,
+.projects-filters select,
+select[name],
+.select-wrapper select {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  appearance: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='chevron-down' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
+}
+
+/* Dark theme overrides for select elements */
+:root.dark-theme select,
+:root.dark-theme .form-group select,
+:root.dark-theme .filter-group select,
+:root.dark-theme .projects-filters select,
+:root.dark-theme select[name],
+:root.dark-theme .select-wrapper select {
+  background-color: var(--background);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Focus states for select elements */
+select:focus,
+.form-group select:focus,
+.filter-group select:focus,
+.projects-filters select:focus,
+select[name]:focus,
+.select-wrapper select:focus {
+  border-color: var(--secondary);
+  outline: none;
+  box-shadow: var(--glow);
+}
+
+/* Select dropdown (options) styling */
+select option {
+  background-color: var(--background);
+  color: var(--text);
 }
 
 /* Responsive Styles */
@@ -685,11 +1008,11 @@ footer {
   .navbar-auth {
     display: none;
   }
-  
+
   .navbar-toggle {
     display: flex;
   }
-  
+
   .navbar.active .navbar-links {
     display: flex;
     flex-direction: column;
@@ -701,7 +1024,7 @@ footer {
     padding: var(--spacing-md) 0;
     border-bottom: 1px solid var(--border);
   }
-  
+
   .navbar.active .navbar-auth {
     display: flex;
     position: absolute;
@@ -713,26 +1036,26 @@ footer {
     padding: var(--spacing-md) 0;
     border-bottom: 1px solid var(--border);
   }
-  
+
   .hero-buttons {
     flex-direction: column;
     gap: var(--spacing-md);
   }
-  
+
   .footer-content {
     flex-direction: column;
     gap: var(--spacing-lg);
   }
-  
+
   .footer-links {
     flex-direction: column;
     gap: var(--spacing-lg);
   }
-  
+
   .event-card {
     flex-direction: column;
   }
-  
+
   .event-date {
     flex-direction: row;
     justify-content: flex-start;
@@ -742,16 +1065,16 @@ footer {
     margin-bottom: var(--spacing-sm);
     padding-bottom: var(--spacing-sm);
   }
-  
+
   .event-date .day {
     margin-right: var(--spacing-xs);
   }
-  
+
   .event-cta {
     margin-left: 0;
     margin-top: var(--spacing-sm);
   }
-  
+
   .glitch {
     font-size: 2rem;
   }
@@ -762,15 +1085,15 @@ footer {
   .event-carousel {
     grid-template-columns: 1fr;
   }
-  
+
   .section-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .hero h1 {
     font-size: 1.8rem;
   }
-  
+
   .hero p {
     font-size: 1.1rem;
   }
