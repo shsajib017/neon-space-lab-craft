@@ -1,44 +1,108 @@
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   --background: 220 26% 14%;
   --foreground: 210 40% 98%;
-  
+
   --card: 225 35% 10%;
   --card-foreground: 210 40% 98%;
- 
+
   --popover: 225 35% 10%;
   --popover-foreground: 210 40% 98%;
- 
+
   --primary: 196 100% 50%;
   --primary-foreground: 0 0% 100%;
- 
+
   --secondary: 217 65% 40%;
   --secondary-foreground: 0 0% 100%;
- 
+
   --muted: 220 26% 20%;
   --muted-foreground: 215 20.2% 65.1%;
- 
+
   --accent: 217 65% 40%;
   --accent-foreground: 210 40% 98%;
- 
+
   --destructive: 0 62.8% 50.6%;
   --destructive-foreground: 210 40% 98%;
- 
+
   --border: 196 100% 50%;
   --input: 217 65% 40%;
   --ring: 196 100% 50%;
- 
+
   --radius: 0.5rem;
 }
 
-body {
-  font-family: 'Rajdhani', sans-serif;
+/* Light theme overrides */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 196 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 65% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 217 65% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 196 100% 50%;
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Orbitron', sans-serif;
+/* Dark theme class for manual toggling */
+.dark-theme {
+  --background: 220 26% 14%;
+  --foreground: 210 40% 98%;
+
+  --card: 225 35% 10%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 225 35% 10%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 196 100% 50%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 217 65% 40%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 220 26% 20%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 217 65% 40%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 50.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 196 100% 50%;
+  --input: 217 65% 40%;
+  --ring: 196 100% 50%;
+}
+
+body {
+  font-family: "Rajdhani", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Orbitron", sans-serif;
 }
