@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team | Modern Engineering Systems Laboratory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* Team page specific styles */
+      .team-container {
+        padding-top: calc(var(--navbar-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-xl);
+      }
+
+      .team-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .team-header h1 {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-sm);
+        color: var(--text);
+      }
+
+      .team-header p {
+        max-width: 800px;
+        margin: 0 auto;
+        color: var(--text-secondary);
+      }
+
+      .team-filters {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+      }
+
+      .team-filter {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .team-filter:hover,
+      .team-filter.active {
+        background: var(--secondary);
+        color: var(--primary);
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+      }
+
+      .team-member {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .team-member:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--glow);
+        border-color: var(--secondary);
+      }
+
+      .member-image {
+        height: 250px;
+        overflow: hidden;
+      }
+
+      .member-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .team-member:hover .member-image img {
+        transform: scale(1.05);
+      }
+
+      .member-info {
+        padding: var(--spacing-md);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-name {
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-xs);
+        color: var(--text);
+      }
+
+      .member-role {
+        color: var(--secondary);
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .member-bio {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-md);
+        flex-grow: 1;
+      }
+
+      .member-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: var(--spacing-sm);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .member-badge {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.1);
+        color: var(--text-secondary);
+      }
+
+      .view-profile {
+        margin-top: var(--spacing-sm);
+        text-align: center;
+        padding: var(--spacing-sm);
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .view-profile:hover {
+        background: var(--secondary);
+        color: var(--primary);
+        border-color: var(--secondary);
+        box-shadow: var(--glow);
+      }
+
+      @media (max-width: 768px) {
+        .team-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="index.html"> <span class="neon-text">ME</span>SL </a>
+        </div>
+
+        <div class="navbar-links">
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="feed.html">Feed</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="team.html" class="active">Team</a>
+        </div>
+
+        <div class="navbar-auth">
+          <button class="btn-login">Login</button>
+          <button class="btn-signup">Sign Up</button>
+        </div>
+
+        <div class="navbar-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="team-container">
+        <div class="team-header">
+          <h1>OUR <span class="neon-text">TEAM</span></h1>
+          <p>
+            Meet the brilliant minds behind our cutting-edge research and
+            innovations. Our diverse team of researchers, engineers, and
+            scientists work together to push the boundaries of modern
+            engineering.
+          </p>
+        </div>
+
+        <div class="team-filters">
+          <button class="team-filter active" data-filter="all">All</button>
+          <button class="team-filter" data-filter="researcher">
+            Researchers
+          </button>
+          <button class="team-filter" data-filter="engineer">Engineers</button>
+          <button class="team-filter" data-filter="student">Students</button>
+          <button class="team-filter" data-filter="staff">Staff</button>
+        </div>
+
+        <div class="team-grid">
+          <!-- Team Member 1 -->
+          <div class="team-member" data-role="researcher">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,1"
+                alt="Dr. Jane Smith"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Dr. Jane Smith</h3>
+              <p class="member-role">Lead Researcher</p>
+              <div class="member-badges">
+                <span class="member-badge">Quantum Computing</span>
+                <span class="member-badge">AI</span>
+                <span class="member-badge">Neural Networks</span>
+              </div>
+              <p class="member-bio">
+                Specializes in quantum neural interfaces and advanced AI
+                systems. Leading the Quantum Neural Interface project.
+              </p>
+              <a href="profile.html?id=jane-smith" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 2 -->
+          <div class="team-member" data-role="engineer">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,2"
+                alt="Alex Johnson"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Alex Johnson</h3>
+              <p class="member-role">Senior Engineer</p>
+              <div class="member-badges">
+                <span class="member-badge">Robotics</span>
+                <span class="member-badge">Swarm Intelligence</span>
+                <span class="member-badge">Hardware</span>
+              </div>
+              <p class="member-bio">
+                Expert in swarm robotics and autonomous systems. Currently
+                leading the Autonomous Swarm Robotics project.
+              </p>
+              <a href="profile.html?id=alex-johnson" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 3 -->
+          <div class="team-member" data-role="researcher">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,3"
+                alt="Dr. Michael Chen"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Dr. Michael Chen</h3>
+              <p class="member-role">Senior Researcher</p>
+              <div class="member-badges">
+                <span class="member-badge">Materials Science</span>
+                <span class="member-badge">Nanotechnology</span>
+                <span class="member-badge">Simulation</span>
+              </div>
+              <p class="member-bio">
+                Specializes in advanced materials and nanotechnology. Lead
+                researcher on the Advanced Material Simulation project.
+              </p>
+              <a href="profile.html?id=michael-chen" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 4 -->
+          <div class="team-member" data-role="student">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,4"
+                alt="Sarah Williams"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Sarah Williams</h3>
+              <p class="member-role">PhD Student</p>
+              <div class="member-badges">
+                <span class="member-badge">AI</span>
+                <span class="member-badge">Machine Learning</span>
+                <span class="member-badge">Data Science</span>
+              </div>
+              <p class="member-bio">
+                Researching advanced machine learning algorithms for real-time
+                data processing in quantum systems.
+              </p>
+              <a href="profile.html?id=sarah-williams" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 5 -->
+          <div class="team-member" data-role="engineer">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,5"
+                alt="David Rodriguez"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">David Rodriguez</h3>
+              <p class="member-role">Systems Engineer</p>
+              <div class="member-badges">
+                <span class="member-badge">Systems Integration</span>
+                <span class="member-badge">IoT</span>
+                <span class="member-badge">Cloud Computing</span>
+              </div>
+              <p class="member-bio">
+                Expert in systems integration and IoT solutions. Working on
+                connecting our lab systems to cloud infrastructure.
+              </p>
+              <a href="profile.html?id=david-rodriguez" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 6 -->
+          <div class="team-member" data-role="staff">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,6"
+                alt="Emily Parker"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Emily Parker</h3>
+              <p class="member-role">Lab Manager</p>
+              <div class="member-badges">
+                <span class="member-badge">Operations</span>
+                <span class="member-badge">Project Management</span>
+                <span class="member-badge">Administration</span>
+              </div>
+              <p class="member-bio">
+                Oversees lab operations and project management. Ensures smooth
+                functioning of all research activities.
+              </p>
+              <a href="profile.html?id=emily-parker" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 7 -->
+          <div class="team-member" data-role="student">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,7"
+                alt="James Wilson"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">James Wilson</h3>
+              <p class="member-role">Masters Student</p>
+              <div class="member-badges">
+                <span class="member-badge">Robotics</span>
+                <span class="member-badge">Computer Vision</span>
+                <span class="member-badge">Automation</span>
+              </div>
+              <p class="member-bio">
+                Researching computer vision applications in robotic systems.
+                Working on the Autonomous Swarm Robotics project.
+              </p>
+              <a href="profile.html?id=james-wilson" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+
+          <!-- Team Member 8 -->
+          <div class="team-member" data-role="researcher">
+            <div class="member-image">
+              <img
+                src="https://source.unsplash.com/random/300x300/?portrait,8"
+                alt="Dr. Lisa Kumar"
+              />
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">Dr. Lisa Kumar</h3>
+              <p class="member-role">Research Scientist</p>
+              <div class="member-badges">
+                <span class="member-badge">Quantum Physics</span>
+                <span class="member-badge">Theoretical Computing</span>
+                <span class="member-badge">Mathematics</span>
+              </div>
+              <p class="member-bio">
+                Theoretical physicist working on quantum computing models.
+                Provides mathematical foundations for our research.
+              </p>
+              <a href="profile.html?id=lisa-kumar" class="view-profile"
+                >View Profile</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo"><span class="neon-text">ME</span>SL</div>
+
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="feed.html">Feed</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Research Papers</a></li>
+                <li><a href="#">Lab Tools</a></li>
+                <li><a href="#">Equipment</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="#">Email Us</a></li>
+                <li><a href="#">Location</a></li>
+                <li><a href="#">Social Media</a></li>
+                <li><a href="#">Support</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 MESL. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Login to <span class="neon-text">ME</span>SL</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required />
+          </div>
+          <button type="submit" class="btn-primary btn-block">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Join <span class="neon-text">ME</span>SL</h2>
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input type="password" id="signup-password" required />
+          </div>
+          <button type="submit" class="btn-primary btn-block">Sign up</button>
+          <p class="form-note">All registrations require admin approval</p>
+        </form>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+    <span class="theme-toggle-icon">🌙</span>
+  </button>
+</html>
